@@ -1,0 +1,20 @@
+const express = require('express');
+const router = express.Router();
+const assets = require('../controllers/assets.controller');
+const users = require('../controllers/users.controller');
+
+router.get('/assets', assets.list);
+router.post('/assets', assets.create);
+router.delete('/assets/:id', assets.delete);
+
+
+router.post('/login', users.login);
+router.post('/logout', users.logout);
+router.get('/profile', users.profile);
+
+router.post('/users', users.create);
+router.get('/:username', users.get)
+
+router.post('/totp', users.totp);
+
+module.exports = router;

@@ -1,0 +1,58 @@
+const User = require('./user.model');
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+
+const assetSchema = new Schema({
+    title: {
+        type: String,
+        required: 'Title is required'
+    },
+    description: {
+        type: String
+    },
+    image: {
+        type: String,
+        required: 'Image is required',
+        validate: {
+            validator: function (value) {
+                try {
+                    const url = new URL(value);
+                    return url.protocol === 'http:' || url.protocol === 'https:'
+                } catch (error) {
+                    return false;
+                }
+            },
+            message: props => `Invalid image URL`
+        }
+    },
+    assetContractAddress: {
+        type: String,
+        required: 'Asset contract address is required.'
+    },
+    tokenId: {
+        type: String,
+        required: 'Token id is required.'
+    },
+    url: {
+        type: String,
+        required: 'URL is required.'
+    },
+    owner: {
+        ref: User.modelName,
+        type: mongoose.Types.ObjectId,
+        require: 'Owner is required'
+    }
+}, {
+    timestamps: true,
+    toJSON: {
+        transform: function (doc, ret) {
+            delete ret._id;
+            delete ret.__v;
+            ret.id = doc.id;
+            return ret;
+        }
+    }
+});
+
+const Asset = mongoose.model('Asset', assetSchema);
+module.exports = Asset;

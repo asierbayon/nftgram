@@ -1,0 +1,14 @@
+[
+    {
+        "fullName": "Asier Bayón",
+        "username": "asier",
+        "email": "asier@asier.com",
+        "password": "asierbayon"
+    },
+    {
+        "fullName": "Elon Musk",
+        "username": "elonmusk",
+        "email": "elon@musk.com",
+        "password": "elonmusk"
+    }
+]
