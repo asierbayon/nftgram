@@ -35,7 +35,7 @@ module.exports.profile = async (req, res, next) => {
     try {
         const user = await User.findOne({ username });
         if (!user) next(createError(404, 'User not found.'))
-
+        
         const assets = await Asset.find({ owner: user.id })
 
         return res.status(200).json({ user, assets })

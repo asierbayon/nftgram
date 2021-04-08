@@ -3,7 +3,7 @@ const router = express.Router();
 const assets = require('../controllers/assets.controller');
 const users = require('../controllers/users.controller');
 
-router.get('/assets', assets.list);
+router.get('/assets/:id', assets.get);
 router.post('/assets', assets.create);
 router.delete('/assets/:id', assets.delete);
 

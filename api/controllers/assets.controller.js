@@ -1,9 +1,12 @@
 const createError = require('http-errors');
 const Asset = require('../models/asset.model');
 
-module.exports.list = (req, res, next) => {
-    Asset.find({})
-        .then(assets => res.json(assets))
+module.exports.get = (req, res, next) => {
+    Asset.findById(req.params.id)
+        .then(asset => {
+            if (asset) res.status(200).json(asset)
+            else next(createError(404, 'Asset not found.'))
+        })
         .catch(next)
 }
 
