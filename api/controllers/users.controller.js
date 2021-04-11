@@ -2,6 +2,8 @@ const createError = require('http-errors');
 const User = require('../models/user.model');
 const passport = require('passport');
 const Asset = require('../models/asset.model');
+const Following = require('../models/following.model');
+const Followers = require('../models/follower.model');
 
 module.exports.create = (req, res, next) => {
     User.findOne({ email: req.body.email })
@@ -38,7 +40,15 @@ module.exports.profile = async (req, res, next) => {
         
         const assets = await Asset.find({ owner: user.id })
 
-        return res.status(200).json({ user, assets })
+        const followers = await Followers.findOne({ user: user.id });
+        const following = await Following.findOne({ user: user.id });
+
+        return res.status(200).json({ user, 
+            followers: followers.followers.length, 
+            following: following.following.length,
+            assets 
+        });
+
     } catch (error) {
         next(error);
     }
