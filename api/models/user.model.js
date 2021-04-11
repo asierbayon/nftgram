@@ -4,6 +4,9 @@ const Schema = mongoose.Schema
 const PASSWORD_PATTERN = /^.{8,}$/;
 const bcrypt = require('bcrypt');
 const validator = require('validator');
+const createError = require('http-errors');
+const Follower = require('../models/follower.model');
+const Following = require('../models/following.model');
 
 const userSchema = new Schema({
     fullName: {
@@ -72,6 +75,21 @@ userSchema.pre('save', function (next) {
         });
     } else {
         next();
+    }
+});
+
+userSchema.pre('save', async function (next) {
+    if (this.isNew) {
+        try {
+            const document = await User.findOne({
+                $or: [{ email: this.email }, { username: this.username }],
+            });
+            if (document) return next(createError(400, 'A user with that email or username already exists.'));
+            await Follower.create({ user: this.id });
+            await Following.create({ user: this.id });
+        } catch (err) {
+            return next(createError(400));
+        }
     }
 });
 
