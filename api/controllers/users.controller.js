@@ -19,7 +19,7 @@ module.exports.create = (req, res, next) => {
 module.exports.get = async (req, res, next) => {
     const { username } = req.params;
     try {
-        const user = await User.findOne({ username });
+        const user = await User.findOne({ username }, 'username fullName id avatar bio website');
         if (!user) next(createError(404, 'User not found'))
 
         const assets = await Asset.find({ owner: user.id })
