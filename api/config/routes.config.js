@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const secure = require('../middlewares/secure.middleware');
 const assets = require('../controllers/assets.controller');
 const users = require('../controllers/users.controller');
 
@@ -10,7 +11,7 @@ router.delete('/assets/:id', assets.delete);
 
 router.post('/login', users.login);
 router.post('/logout', users.logout);
-router.get('/profile', users.profile);
+router.get('/profile', secure.isAuthenticated, users.profile);
 
 router.post('/users', users.create);
 router.get('/:username', users.get)

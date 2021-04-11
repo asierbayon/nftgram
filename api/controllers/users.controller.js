@@ -20,7 +20,7 @@ module.exports.get = async (req, res, next) => {
     const { username } = req.params;
     try {
         const user = await User.findOne({ username });
-        if (!user) next(createError(404, 'User not found.'))
+        if (!user) next(createError(404, 'User not found'))
 
         const assets = await Asset.find({ owner: user.id })
 
@@ -34,7 +34,7 @@ module.exports.profile = async (req, res, next) => {
     const { username } = req.user;
     try {
         const user = await User.findOne({ username });
-        if (!user) next(createError(404, 'User not found.'))
+        if (!user) next(createError(404, 'User not found'))
         
         const assets = await Asset.find({ owner: user.id })
 
@@ -60,7 +60,7 @@ module.exports.update = (req, res, next) => {
 
 module.exports.totp = (req, res, next) => {
     if (!req.isAuthenticated()) {
-        return next(createError(401, 'user is not authenticated'))
+        return next(createError(401, 'Not authenticated'))
     }
 
     if (totp(req.user.totpSecret) === req.body.totp) {
