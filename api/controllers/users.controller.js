@@ -37,16 +37,17 @@ module.exports.profile = async (req, res, next) => {
     try {
         const user = await User.findOne({ username });
         if (!user) next(createError(404, 'User not found'))
-        
+
         const assets = await Asset.find({ owner: user.id })
 
         const followers = await Follower.findOne({ user: user.id });
         const following = await Following.findOne({ user: user.id });
 
-        return res.status(200).json({ user, 
-            followers: followers.followers.length, 
+        return res.status(200).json({
+            user,
+            followers: followers.followers.length,
             following: following.following.length,
-            assets 
+            assets
         });
 
     } catch (error) {
@@ -106,23 +107,56 @@ module.exports.followUser = async (req, res, next) => {
     const { username } = req.params;
     const user = req.user;
 
-    if (username === user.username) next(createError(400, 'You cannot follow yourself'));
+    try {
+        if (username === user.username) next(createError(400, 'You cannot follow yourself'));
+        else {
+            const userToFollow = await User.findOne({ username });
+            if (!userToFollow) next(createError(400, 'Could not find that user'));
 
-    const userToFollow = await User.findOne({ username });
-    if (!userToFollow) next(createError(400, 'Could not find that user'));
+            const followerUpdate = await Follower.updateOne(
+                { user: userToFollow.id, 'followers.user': { $ne: user.id } },
+                { $push: { followers: { user: user.id } } }
+            );
+            const followingUpdate = await Following.updateOne(
+                { user: user.id, 'following.user': { $ne: userToFollow.id } },
+                { $push: { following: { user: userToFollow.id } } }
+            )
+            if (!followerUpdate.nModified || !followingUpdate.nModified) {
+                next(createError(400, 'You are already following this user'))
+            }
 
-    const followerUpdate = await Follower.updateOne(
-        { user: userToFollow.id, 'followers.user': { $ne: user.id }},
-        { $push: { followers: { user: user.id } } }
-    );
-    const followingUpdate = await Following.updateOne(
-        { user: user.id, 'following.user': { $ne: userToFollow.id }},
-        { $push: { following: { user: userToFollow.id } } }
-    )
-    if (!followerUpdate.nModified || !followingUpdate.nModified) {
-        next(createError(400, 'You are already following this user'))
+            res.status(200).json({ message: `Now you are following ${username}` })
+        }
+    } catch {
+        next(error);
     }
-
-    res.status(200).json({ message: `Now you are following ${username}` })
 }
 
+module.exports.unfollowUser = async (req, res, next) => {
+    const { username } = req.params;
+    const user = req.user;
+
+    try {
+        if (username === user.username) next(createError(400, 'You cannot unfollow yourself'));
+        const userToUnfollow = await User.findOne({ username });
+        if (!userToUnfollow) next(createError(400, 'Could not find that user'));
+
+        const followingUpdate = await Following.updateOne(
+            { user: user.id }, { $pull: { following: { user: userToUnfollow.id } } }
+        )
+        const followerUpdate = await Follower.updateOne(
+            { user: userToUnfollow.id }, { $pull: { followers: { user: user.id } } }
+        )
+
+        if (!followingUpdate.nModified || !followerUpdate.nModified) {
+            next(createError(400, 'You are not following this user'))
+        } else {
+            res.status(200).json({ message: `${username} unfollowed` })
+        }
+    }
+    catch {
+        next(error);
+    }
+
+
+}

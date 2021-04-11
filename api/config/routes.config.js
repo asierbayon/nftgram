@@ -17,6 +17,7 @@ router.post('/users', users.create);
 router.get('/:username', users.get);
 
 router.post('/:username/follow', secure.isAuthenticated, users.followUser);
+router.post('/:username/unfollow', secure.isAuthenticated, users.unfollowUser);
 
 router.post('/totp', users.totp);
 
