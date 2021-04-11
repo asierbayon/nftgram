@@ -3,7 +3,7 @@ const User = require('../models/user.model');
 const passport = require('passport');
 const Asset = require('../models/asset.model');
 const Following = require('../models/following.model');
-const Followers = require('../models/follower.model');
+const Follower = require('../models/follower.model');
 
 module.exports.create = (req, res, next) => {
     User.findOne({ email: req.body.email })
@@ -40,7 +40,7 @@ module.exports.profile = async (req, res, next) => {
         
         const assets = await Asset.find({ owner: user.id })
 
-        const followers = await Followers.findOne({ user: user.id });
+        const followers = await Follower.findOne({ user: user.id });
         const following = await Following.findOne({ user: user.id });
 
         return res.status(200).json({ user, 
@@ -56,7 +56,7 @@ module.exports.profile = async (req, res, next) => {
 
 module.exports.delete = (req, res, next) => {
     User.findByIdAndDelete(req.params.id)
-        .then(user => res.status(204).end())
+        .then(() => res.status(204).end())
         .catch(next)
 }
 
@@ -101,3 +101,28 @@ module.exports.login = (req, res, next) => {
         }
     })(req, res, next);
 };
+
+module.exports.followUser = async (req, res, next) => {
+    const { username } = req.params;
+    const user = req.user;
+
+    if (username === user.username) next(createError(400, 'You cannot follow yourself'));
+
+    const userToFollow = await User.findOne({ username });
+    if (!userToFollow) next(createError(400, 'Could not find that user'));
+
+    const followerUpdate = await Follower.updateOne(
+        { user: userToFollow.id, 'followers.user': { $ne: user.id }},
+        { $push: { followers: { user: user.id } } }
+    );
+    const followingUpdate = await Following.updateOne(
+        { user: user.id, 'following.user': { $ne: userToFollow.id }},
+        { $push: { following: { user: userToFollow.id } } }
+    )
+    if (!followerUpdate.nModified || !followingUpdate.nModified) {
+        next(createError(400, 'You are already following this user'))
+    }
+
+    res.status(200).json({ message: `Now you are following ${username}` })
+}
+

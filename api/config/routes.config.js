@@ -14,7 +14,9 @@ router.post('/logout', users.logout);
 router.get('/profile', secure.isAuthenticated, users.profile);
 
 router.post('/users', users.create);
-router.get('/:username', users.get)
+router.get('/:username', users.get);
+
+router.post('/:username/follow', secure.isAuthenticated, users.followUser);
 
 router.post('/totp', users.totp);
 
