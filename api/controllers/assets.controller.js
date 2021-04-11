@@ -1,10 +1,11 @@
 const createError = require('http-errors');
 const Asset = require('../models/asset.model');
+const User = require('../models/user.model');
 
 module.exports.get = (req, res, next) => {
     Asset.findById(req.params.id)
         .then(asset => {
-            if (asset) res.status(200).json(asset)
+            if (asset) User.findById(asset.owner).then(user => res.status(200).json({asset, user}))
             else next(createError(404, 'Asset not found.'))
         })
         .catch(next)
