@@ -7,9 +7,9 @@ const likeSchema = new Schema(
 			type: Schema.ObjectId,
 			ref: 'User',
 		},
-		post: {
+		asset: {
 			type: Schema.ObjectId,
-			ref: 'Post',
+			ref: 'Asset',
 		}
 	}
 );
