@@ -47,3 +47,16 @@ module.exports.unlikePost = async (req, res, next) => {
         })
     }
 }
+
+module.exports.listLikes = async (req, res, next) => {
+    const likes = await Like.find({ asset: req.params.id })
+        .populate({
+            path: 'likedBy',
+            select: 'username fullName avatar'
+        }).select('username fullName avatar')
+
+    res.status(200).json({
+        likes: likes.length,
+        likedBy: likes
+    })
+}

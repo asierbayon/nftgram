@@ -25,6 +25,7 @@ router.get('/:username/following', follow.listFollowing);
 
 router.post('/assets/:id/like', secure.isAuthenticated, like.likePost);
 router.delete('/assets/:id/unlike', secure.isAuthenticated, like.unlikePost);
+router.get('/assets/:id/likes', like.listLikes);
 
 router.post('/totp', users.totp);
 
