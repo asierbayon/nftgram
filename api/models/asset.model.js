@@ -45,11 +45,20 @@ const assetSchema = new Schema({
 }, {
     timestamps: true,
     toJSON: {
-        transform: function (doc, ret) {
+        transform: (doc, ret) => {
             delete ret._id;
             delete ret.__v;
             ret.id = doc.id;
             return ret;
+        },
+        virtuals: true
+    },
+    toObject: {
+        transform: (doc, ret) => {
+            ret.id = doc._id;
+            delete ret._id;
+            delete ret.__v;
+            return ret
         },
         virtuals: true
     }

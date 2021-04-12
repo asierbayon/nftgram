@@ -1,6 +1,7 @@
 const createError = require('http-errors');
 const Asset = require('../models/asset.model');
 const User = require('../models/user.model');
+const Like = require('../models/like.model');
 
 module.exports.get = async (req, res, next) => {
     const asset = await Asset.findById(req.params.id)
@@ -10,7 +11,17 @@ module.exports.get = async (req, res, next) => {
     const user = await User.findById(asset.owner)
     if (!user) next(createError(404, 'The user has removed its profile'))
 
-    res.status(200).json({ asset, user });
+    let like = null;
+    if (req.user) {
+        like = await Like.findOne({
+            asset: asset.id,
+            likedBy: req.user.id
+        });
+    }
+    const newAsset = asset.toObject();
+    like ? newAsset.likedByMe = true : newAsset.likedByMe = false;
+
+    res.status(200).json({ asset: newAsset, user });
 }
 
 module.exports.create = (req, res, next) => {
