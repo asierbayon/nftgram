@@ -8,7 +8,7 @@ module.exports.get = async (req, res, next) => {
         .populate('likes')
     if (!asset) next(createError(404, 'Asset not found.'));
 
-    const user = await User.findById(asset.owner)
+    const user = await User.findById(asset.owner, 'fullName username avatar')
     if (!user) next(createError(404, 'The user has removed its profile'))
 
     let like = null;
