@@ -50,8 +50,16 @@ const assetSchema = new Schema({
             delete ret.__v;
             ret.id = doc.id;
             return ret;
-        }
+        },
+        virtuals: true
     }
+});
+
+assetSchema.virtual("likes", {
+	ref: "Like",
+	foreignField: "asset",
+	localField: "_id",
+	count: true,
 });
 
 const Asset = mongoose.model('Asset', assetSchema);
