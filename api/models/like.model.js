@@ -6,10 +6,12 @@ const likeSchema = new Schema(
         likedBy: {
             type: Schema.ObjectId,
             ref: 'User',
+            required: true
         },
         asset: {
             type: Schema.ObjectId,
             ref: 'Asset',
+            required: true
         }
     }, 
     {
