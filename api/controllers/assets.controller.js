@@ -3,12 +3,12 @@ const Asset = require('../models/asset.model');
 const User = require('../models/user.model');
 
 module.exports.get = async (req, res, next) => {
-    const asset = await Asset.findById(req.params.id);
-    
+    const asset = await Asset.findById(req.params.id)
+        .populate('likes')
+
     if (!asset) next(createError(404, 'Asset not found.'));
 
     const user = await User.findById(asset.owner)
-        .populate('likes')
 
     res.status(200).json({ asset, user });
 }
