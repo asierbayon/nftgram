@@ -5,6 +5,7 @@ const assets = require('../controllers/assets.controller');
 const users = require('../controllers/users.controller');
 const follow = require('../controllers/follow.controller');
 const like = require('../controllers/like.controller');
+const comment = require('../controllers/comment.controller');
 
 router.get('/assets/:id', assets.get);
 router.post('/assets', secure.isAuthenticated, assets.create);
@@ -26,6 +27,9 @@ router.get('/:username/following', follow.listFollowing);
 router.post('/assets/:id/like', secure.isAuthenticated, like.likePost);
 router.delete('/assets/:id/unlike', secure.isAuthenticated, like.unlikePost);
 router.get('/assets/:id/likes', like.listLikes);
+
+router.post('/assets/:id/comments', secure.isAuthenticated, comment.create);
+router.delete('/assets/:id/comments/:commentId', secure.isAuthenticated, comment.delete);
 
 router.post('/totp', users.totp);
 
