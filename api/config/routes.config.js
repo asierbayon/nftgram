@@ -6,8 +6,8 @@ const users = require('../controllers/users.controller');
 const follow = require('../controllers/follow.controller');
 
 router.get('/assets/:id', assets.get);
-router.post('/assets', assets.create);
-router.delete('/assets/:id', assets.delete);
+router.post('/assets', secure.isAuthenticated, assets.create);
+router.delete('/assets/:id', secure.isAuthenticated, assets.delete);
 
 
 router.post('/login', users.login);
