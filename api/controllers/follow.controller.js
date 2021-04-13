@@ -8,7 +8,7 @@ module.exports.followUser = async (req, res, next) => {
     if (username === req.user.username) return next(createError(400, 'You cannot follow yourself'));
 
     const userToFollow = await User.findOne({ username });
-    if (!userToFollow) return Error(404, 'User not found'));
+    if (!userToFollow) return next(createError(404, 'User not found'));
 
     const alreadyFollowing = await Follow.findOne({
         user: req.user.id,
