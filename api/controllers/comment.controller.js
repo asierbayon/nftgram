@@ -24,7 +24,20 @@ module.exports.delete = async (req, res, next) => {
     if (!comment) next(createError(404, 'Comment not found'));
 
     await Comment.findByIdAndDelete(comment.id);
-    res.status(200).json({ 
+    res.status(200).json({
         message: 'success'
-     })
+    })
+}
+
+module.exports.list = async (req, res, next) => {
+    const asset = await Asset.findById(req.params.id);
+    if (!asset) next(createError(404, 'Asset not found'));
+
+    const comments = await Comment.find({ asset: req.params.id }, 'user body')
+        .populate({
+            path: 'user',
+            select: 'username fullName avatar'
+        })
+
+    res.status(200).json({ comments })
 }
