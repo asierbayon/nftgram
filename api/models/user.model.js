@@ -11,19 +11,26 @@ const Following = require('../models/following.model');
 const userSchema = new Schema({
     fullName: {
         type: String,
-        required: 'Full name is required.',
+        required: 'Full name is required',
+        maxlength: [50, 'Your name is too long']
     },
     username: {
         type: String,
         required: 'An username is required.',
         unique: true,
         lowercase: true,
-        // Char limit and just letters and numbers and unique
+        minlength: [3, 'Your username is too short'],
+        maxlength: [35, 'Your username is too long'],
+        validate: (value) => {
+            if (!validator.isAlphanumeric(value)) {
+                throw new Error('Your username can only contain letters and numbers');
+            }
+        },
     },
     email: {
         type: String,
         required: true,
-        unique: true,
+        unique: [true, 'There is already an account using this email'],
         lowercase: true,
         validate: (value) => {
             if (!validator.isEmail(value)) {
@@ -31,7 +38,10 @@ const userSchema = new Schema({
             }
         },
     },
-    avatar: String,
+    avatar: {
+        type: String,
+        default: `https://avatars.dicebear.com/api/identicon/${this.username}.svg`
+    },
     bio: {
         type: String,
         maxlength: [150, 'Bio is too long.'],
