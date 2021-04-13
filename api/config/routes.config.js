@@ -33,6 +33,5 @@ router.post('/assets/:id/comments', secure.isAuthenticated, comment.create);
 router.delete('/assets/:id/comments/:commentId', secure.isAuthenticated, comment.delete);
 router.get('/assets/:id/comments', comment.list);
 
-router.post('/totp', users.totp);
 
 module.exports = router;

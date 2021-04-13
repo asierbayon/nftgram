@@ -78,19 +78,6 @@ module.exports.update = (req, res, next) => {
         .catch(next)
 }
 
-module.exports.totp = (req, res, next) => {
-    if (!req.isAuthenticated()) {
-        return next(createError(401, 'Not authenticated'))
-    }
-
-    if (totp(req.user.totpSecret) === req.body.totp) {
-        req.session.secondFactor = true
-        return res.json(req.user)
-    }
-
-    next(createError(400, 'invalid TOTP'))
-}
-
 module.exports.logout = (req, res, next) => {
     req.logout();
 
