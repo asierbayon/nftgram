@@ -65,10 +65,17 @@ const assetSchema = new Schema({
 });
 
 assetSchema.virtual("likes", {
-	ref: "Like",
-	foreignField: "asset",
-	localField: "_id",
-	count: true,
+    ref: "Like",
+    foreignField: "asset",
+    localField: "_id",
+    count: true,
+});
+
+assetSchema.virtual("comments", {
+    ref: "Comment",
+    foreignField: "asset",
+    localField: "_id",
+    count: true,
 });
 
 const Asset = mongoose.model('Asset', assetSchema);

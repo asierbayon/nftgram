@@ -6,6 +6,8 @@ const Like = require('../models/like.model');
 module.exports.get = async (req, res, next) => {
     const asset = await Asset.findById(req.params.id)
         .populate('likes')
+        .populate('comments')
+        
     if (!asset) next(createError(404, 'Asset not found.'));
 
     const user = await User.findById(asset.owner, 'fullName username avatar')
