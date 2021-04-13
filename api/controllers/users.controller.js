@@ -47,7 +47,7 @@ module.exports.profile = async (req, res, next) => {
         const user = await User.findOne({ username });
         if (!user) next(createError(404, 'User not found'))
 
-        const assets = await Asset.find({ owner: user.id })
+        const assets = await Asset.find({ owner: user.id }, 'image')
 
         const followers = await Follower.findOne({ user: user.id });
         const following = await Following.findOne({ user: user.id });
