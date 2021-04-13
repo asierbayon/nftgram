@@ -16,7 +16,8 @@ router.post('/login', users.login);
 router.post('/logout', users.logout);
 router.get('/profile', secure.isAuthenticated, users.profile);
 
-router.post('/users', users.create);
+router.get('/users', users.search);
+router.post('/users', users.create); // TBC: Change to '/'
 router.get('/:username', users.get);
 
 router.post('/:username/follow', secure.isAuthenticated, follow.followUser);

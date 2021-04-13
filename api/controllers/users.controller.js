@@ -111,3 +111,31 @@ module.exports.login = (req, res, next) => {
         }
     })(req, res, next);
 };
+
+module.exports.search = async (req, res, next) => {
+    if (!req.body.search) next(createError(400, 'Please provide a search value'))
+
+    const regex = `^${req.body.search}`;
+    const searchQuery = new RegExp(regex, "i");
+
+    const users = await User.find({
+        $or: [
+            {
+                username: searchQuery,
+            },
+            {
+                fullName: searchQuery,
+            },
+        ],
+    })
+        .limit(8)
+        .skip(0)
+        .select("username fullName avatar");
+
+    if (!users) next(createError(404, 'No users found'))
+
+    res.status(200).json({
+        results: users.length,
+        users
+    });
+};
