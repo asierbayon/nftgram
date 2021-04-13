@@ -127,7 +127,7 @@ userSchema.pre('save', async function (next) {
 userSchema.post('remove', function (next) {
     Asset.deleteMany({ owner: req.params.id }).then(
         Comment.deleteMany({ user: req.params.id }).then(
-            Like.deleteMany({ user: req.params.id }).then(
+            Like.deleteMany({ likedBy: req.params.id }).then(
                 Follow.deleteMany({ user: req.params.id }).then(
                     next()
                 )

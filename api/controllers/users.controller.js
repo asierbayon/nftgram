@@ -119,9 +119,9 @@ module.exports.search = async (req, res, next) => {
 };
 
 module.exports.delete = async (req, res, next) => {
-    const user = await User.findOne(req.params.id);
+    const user = await User.findById(req.params.id);
     if (!user) return next(createError(404, 'User not found'))
-    else if (user !== req.user.id) return next(createError(400, 'Only the owner can perform this action'))
+    else if (req.params.id !== req.user.id) return next(createError(400, 'Only the owner can perform this action'))
     else {
         await User.findByIdAndDelete(req.params.id)
         await Asset.deleteMany({ owner: req.params.id })
