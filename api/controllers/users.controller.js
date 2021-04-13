@@ -7,7 +7,7 @@ module.exports.create = (req, res, next) => {
     User.findOne({ email: req.body.email })
         .then(user => {
             if (user) {
-                next(createError(400, { errors: { email: 'This email already exists' } }))
+                return next(createError(400, { errors: { email: 'This email already exists' } }))
             } else {
                 return User.create(req.body)
                     .then(user => res.status(201).json(user))
@@ -22,7 +22,7 @@ module.exports.get = async (req, res, next) => {
         const user = await User.findOne({ username }, 'username fullName id avatar bio website')
             .populate('followingCount')
             .populate('followersCount')
-        if (!user) next(createError(404, 'User not found'));
+        if (!user) return next(createError(404, 'User not found'));
 
         const assets = await Asset.find({ owner: user.id }, 'image');
 
@@ -41,7 +41,7 @@ module.exports.profile = async (req, res, next) => {
     const user = await User.findOne({ username })
         .populate('followingCount')
         .populate('followersCount')
-    if (!user) next(createError(404, 'User not found'))
+    if (!user) return next(createError(404, 'User not found'))
 
     const assets = await Asset.find({ owner: user.id }, 'image')
 
@@ -77,7 +77,7 @@ module.exports.login = (req, res, next) => {
         if (error) {
             next(error);
         } else if (!user) {
-            next(createError(400, { errors: validations }))
+            return next(createError(400, { errors: validations }))
         } else {
             req.login(user, error => {
                 if (error) next(error)
@@ -88,7 +88,7 @@ module.exports.login = (req, res, next) => {
 };
 
 module.exports.search = async (req, res, next) => {
-    if (!req.body.search) next(createError(400, 'Please provide a search value'))
+    if (!req.body.search) return next(createError(400, 'Please provide a search value'))
 
     const regex = `^${req.body.search}`;
     const searchQuery = new RegExp(regex, "i");
@@ -107,7 +107,7 @@ module.exports.search = async (req, res, next) => {
         .skip(0)
         .select("username fullName avatar");
 
-    if (!users) next(createError(404, 'No users found'))
+    if (!users) return next(createError(404, 'No users found'))
 
     res.status(200).json({
         results: users.length,

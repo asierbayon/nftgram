@@ -1,20 +1,18 @@
 const Like = require('../models/like.model');
 const Asset = require('../models/asset.model');
-require('express-async-errors');
 const createError = require('http-errors');
 
 
 module.exports.likePost = async (req, res, next) => {
     const asset = await Asset.findById(req.params.id);
-    /* if (!asset) throw Error('This post does not exist') */
-    if (!asset) next(createError(404, 'This post does not exist'));
+    if (!asset) return next(createError(404, 'This post does not exist'));
 
     const alreadyLiked = await Like.findOne({
         likedBy: req.user.id,
         asset: req.params.id
     })
 
-    if (alreadyLiked) next(createError(400, 'You already liked this post'));
+    if (alreadyLiked) return next(createError(400, 'You already liked this post'));
     else {
         await Like.create({
             likedBy: req.user.id,
@@ -30,14 +28,14 @@ module.exports.likePost = async (req, res, next) => {
 
 module.exports.unlikePost = async (req, res, next) => {
     const asset = await Asset.findById(req.params.id);
-    if (!asset) next(createError(404, 'This post does not exist'));
+    if (!asset) return next(createError(404, 'This post does not exist'));
 
     const alreadyLiked = await Like.findOne({
         likedBy: req.user.id,
         asset: req.params.id
     })
 
-    if (!alreadyLiked) next(createError(400, 'You have not liked this post yet'));
+    if (!alreadyLiked) return next(createError(400, 'You have not liked this post yet'));
     else {
         await Like.findOneAndDelete({
             likedBy: req.user.id,

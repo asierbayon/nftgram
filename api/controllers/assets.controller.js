@@ -9,10 +9,10 @@ module.exports.get = async (req, res, next) => {
         .populate('likes')
         .populate('comments')
 
-    if (!asset) next(createError(404, 'Asset not found.'));
+    if (!asset) return next(createError(404, 'Asset not found.'));
 
     const user = await User.findById(asset.owner, 'fullName username avatar')
-    if (!user) next(createError(404, 'The user has removed its profile'))
+    if (!user) return next(createError(404, 'The user has removed its profile'))
 
     let like = null;
     if (req.user) {
@@ -37,8 +37,8 @@ module.exports.create = (req, res, next) => {
 module.exports.delete = (req, res, next) => {
     Asset.findById(req.params.id)
         .then(asset => {
-            if (!asset) next(createError(404, 'Asset not found.'));
-            else if (asset.owner != req.user.id) next(createError(403, 'Only the owner can perform this action.'));
+            if (!asset) return next(createError(404, 'Asset not found.'));
+            else if (asset.owner != req.user.id) return next(createError(403, 'Only the owner can perform this action.'));
             else return asset.delete().then(() => res.status(204).end())
         }).catch(next)
 }
