@@ -19,6 +19,7 @@ router.get('/profile', secure.isAuthenticated, users.profile);
 router.get('/users', users.search);
 router.post('/users', users.create); // TBC: Change to '/'
 router.get('/:username', users.get);
+router.delete('/users/:id', users.delete);
 
 router.post('/:username/follow', secure.isAuthenticated, follow.followUser);
 router.delete('/:username/follow', secure.isAuthenticated, follow.unfollowUser);

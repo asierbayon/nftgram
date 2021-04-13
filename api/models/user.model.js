@@ -4,8 +4,10 @@ const PASSWORD_PATTERN = /^.{8,}$/;
 const bcrypt = require('bcrypt');
 const validator = require('validator');
 const createError = require('http-errors');
-const Follower = require('../models/follower.model');
-const Following = require('../models/following.model');
+const Asset = require('../models/asset.model');
+const Comment = require('../models/comment.model');
+const Follow = require('../models/follow.model');
+const Like = require('../models/like.model');
 
 const userSchema = new Schema({
     fullName: {
@@ -39,7 +41,9 @@ const userSchema = new Schema({
     },
     avatar: {
         type: String,
-        default: `https://avatars.dicebear.com/api/identicon/${this.username}.svg`
+        default: function () {
+            return `https://avatars.dicebear.com/api/identicon/${this.username}.svg`
+        },
     },
     bio: {
         type: String,
@@ -69,29 +73,29 @@ const userSchema = new Schema({
 });
 
 userSchema.virtual("followers", {
-	ref: "Follow",
-	foreignField: "following",
-	localField: "_id",
+    ref: "Follow",
+    foreignField: "following",
+    localField: "_id",
 });
 
 userSchema.virtual("following", {
-	ref: "Follow",
-	foreignField: "user",
-	localField: "_id",
+    ref: "Follow",
+    foreignField: "user",
+    localField: "_id",
 });
 
 userSchema.virtual("followersCount", {
-	ref: "Follow",
-	foreignField: "following",
-	localField: "_id",
-	count: true,
+    ref: "Follow",
+    foreignField: "following",
+    localField: "_id",
+    count: true,
 });
 
 userSchema.virtual("followingCount", {
-	ref: "Follow",
-	foreignField: "user",
-	localField: "_id",
-	count: true,
+    ref: "Follow",
+    foreignField: "user",
+    localField: "_id",
+    count: true,
 });
 
 
@@ -118,6 +122,18 @@ userSchema.pre('save', async function (next) {
             return next(createError(400));
         }
     }
+});
+
+userSchema.post('remove', function (next) {
+    Asset.deleteMany({ owner: req.params.id }).then(
+        Comment.deleteMany({ user: req.params.id }).then(
+            Like.deleteMany({ user: req.params.id }).then(
+                Follow.deleteMany({ user: req.params.id }).then(
+                    next()
+                )
+            )
+        )
+    ).catch(next(error))
 });
 
 userSchema.methods.checkPassword = function (passwordToCheck) {

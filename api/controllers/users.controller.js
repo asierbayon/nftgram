@@ -2,6 +2,9 @@ const createError = require('http-errors');
 const User = require('../models/user.model');
 const passport = require('passport');
 const Asset = require('../models/asset.model');
+const Comment = require('../models/comment.model');
+const Follow = require('../models/follow.model');
+const Like = require('../models/like.model');
 
 module.exports.create = (req, res, next) => {
     User.findOne({ email: req.body.email })
@@ -114,3 +117,18 @@ module.exports.search = async (req, res, next) => {
         users
     });
 };
+
+module.exports.delete = async (req, res, next) => {
+    const user = await User.findOne(req.params.id);
+    if (!user) return next(createError(404, 'User not found'))
+    else if (user !== req.user.id) return next(createError(400, 'Only the owner can perform this action'))
+    else {
+        await User.findByIdAndDelete(req.params.id)
+        await Asset.deleteMany({ owner: req.params.id })
+        await Comment.deleteMany({ user: req.params.id })
+        await Like.deleteMany({ user: req.params.id })
+        await Follow.deleteMany({ user: req.params.id })
+    }
+
+    res.status(204).json({ message: 'Your account has been removed' })
+}

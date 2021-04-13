@@ -38,8 +38,8 @@ const assetSchema = new Schema({
         required: 'URL is required.'
     },
     owner: {
-        ref: User.modelName,
-        type: mongoose.Types.ObjectId,
+        ref: 'User',
+        type: Schema.ObjectId,
         require: 'Owner is required'
     }
 }, {

@@ -2,7 +2,7 @@ const createError = require('http-errors');
 const Asset = require('../models/asset.model');
 const User = require('../models/user.model');
 const Like = require('../models/like.model');
-const Follow = require('../models/following.model');
+const Follow = require('../models/follow.model');
 
 module.exports.get = async (req, res, next) => {
     const asset = await Asset.findById(req.params.id)
@@ -48,3 +48,4 @@ module.exports.feed = async (req, res, next) => {
 
     res.status(200).json(following);
 }
+
