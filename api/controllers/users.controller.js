@@ -2,8 +2,6 @@ const createError = require('http-errors');
 const User = require('../models/user.model');
 const passport = require('passport');
 const Asset = require('../models/asset.model');
-const Following = require('../models/following.model');
-const Follower = require('../models/follower.model');
 
 module.exports.create = (req, res, next) => {
     User.findOne({ email: req.body.email })
@@ -21,18 +19,15 @@ module.exports.create = (req, res, next) => {
 module.exports.get = async (req, res, next) => {
     const { username } = req.params;
     try {
-        const user = await User.findOne({ username }, 'username fullName id avatar bio website');
+        const user = await User.findOne({ username }, 'username fullName id avatar bio website')
+            .populate('followingCount')
+            .populate('followersCount')
         if (!user) next(createError(404, 'User not found'));
 
         const assets = await Asset.find({ owner: user.id }, 'image');
 
-        const followers = await Follower.findOne({ user: user.id });
-        const following = await Following.findOne({ user: user.id });
-
         return res.status(200).json({
             user,
-            followers: followers.followers.length,
-            following: following.following.length,
             assets
         });
 
@@ -43,25 +38,18 @@ module.exports.get = async (req, res, next) => {
 
 module.exports.profile = async (req, res, next) => {
     const { username } = req.user;
-    try {
-        const user = await User.findOne({ username });
-        if (!user) next(createError(404, 'User not found'))
+    const user = await User.findOne({ username })
+        .populate('followingCount')
+        .populate('followersCount')
+    if (!user) next(createError(404, 'User not found'))
 
-        const assets = await Asset.find({ owner: user.id }, 'image')
+    const assets = await Asset.find({ owner: user.id }, 'image')
 
-        const followers = await Follower.findOne({ user: user.id });
-        const following = await Following.findOne({ user: user.id });
 
-        return res.status(200).json({
-            user,
-            followers: followers.followers.length,
-            following: following.following.length,
-            assets
-        });
-
-    } catch (error) {
-        next(error);
-    }
+    return res.status(200).json({
+        user,
+        assets
+    });
 }
 
 module.exports.delete = (req, res, next) => {

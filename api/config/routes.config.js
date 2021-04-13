@@ -21,7 +21,8 @@ router.post('/users', users.create); // TBC: Change to '/'
 router.get('/:username', users.get);
 
 router.post('/:username/follow', secure.isAuthenticated, follow.followUser);
-router.post('/:username/unfollow', secure.isAuthenticated, follow.unfollowUser);
+router.delete('/:username/follow', secure.isAuthenticated, follow.unfollowUser);
+
 router.get('/:username/followers', follow.listFollowers);
 router.get('/:username/following', follow.listFollowing);
 

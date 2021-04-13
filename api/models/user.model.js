@@ -57,6 +57,7 @@ const userSchema = new Schema({
 }, {
     timestamps: true,
     toJSON: {
+        virtuals: true,
         transform: (doc, ret) => {
             ret.id = doc._id;
             delete ret._id;
@@ -66,6 +67,34 @@ const userSchema = new Schema({
         }
     }
 });
+
+userSchema.virtual("followers", {
+	ref: "Follow",
+	foreignField: "following",
+	localField: "_id",
+});
+
+userSchema.virtual("following", {
+	ref: "Follow",
+	foreignField: "user",
+	localField: "_id",
+});
+
+userSchema.virtual("followersCount", {
+	ref: "Follow",
+	foreignField: "following",
+	localField: "_id",
+	count: true,
+});
+
+userSchema.virtual("followingCount", {
+	ref: "Follow",
+	foreignField: "user",
+	localField: "_id",
+	count: true,
+});
+
+
 
 userSchema.pre('save', function (next) {
     if (this.isModified('password')) {
@@ -85,8 +114,6 @@ userSchema.pre('save', async function (next) {
                 $or: [{ email: this.email }, { username: this.username }],
             });
             if (document) return next(createError(400, 'A user with that email or username already exists.'));
-            await Follower.create({ user: this.id });
-            await Following.create({ user: this.id });
         } catch (err) {
             return next(createError(400));
         }
