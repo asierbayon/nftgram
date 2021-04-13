@@ -44,8 +44,46 @@ module.exports.delete = (req, res, next) => {
 }
 
 module.exports.feed = async (req, res, next) => {
-    const following = await Follow.find({ user: req.user.id })
+    const limit = 10;
+    const skip = 0;
 
-    res.status(200).json(following);
+    const following = await Follow.find({ user: req.user.id })
+        .populate({ path: 'following' })
+
+    const followingArr = [];
+    following.forEach(user => followingArr.push(user.following.id));
+    followingArr.push(req.user.id);
+
+    const assetList = await Asset.find({ owner: { $in: followingArr }}, 'title image')
+        .sort({ createdAt: -1 })
+        .limit(limit)
+        .skip(skip)
+        .populate('likes')
+        .populate('comments')
+        .populate({
+            path: 'owner',
+            select: 'username avatar'
+        })
+
+    const newAssets = assetList.map(async (asset) => {
+        const likedByMe = await Like.findOne({
+            likedBy: req.user.id,
+            asset: asset.id,
+        });
+
+        let newAsset = asset.toObject();
+
+        if (likedByMe) {
+            newAsset.likedByMe = true;
+        } else {
+            newAsset.likedByMe = false;
+        }
+
+        return newAsset;
+    });
+
+    const assets = await Promise.all(newAssets);
+
+    res.status(200).json(assets);
 }
 
