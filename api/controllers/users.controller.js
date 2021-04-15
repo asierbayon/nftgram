@@ -5,8 +5,6 @@ const Asset = require('../models/asset.model');
 const Comment = require('../models/comment.model');
 const Follow = require('../models/follow.model');
 const Like = require('../models/like.model');
-const multer = require('multer');
-const cloudinary = require("cloudinary").v2;
 
 
 module.exports.create = (req, res, next) => {
@@ -66,6 +64,8 @@ module.exports.delete = (req, res, next) => {
 
 module.exports.update = (req, res, next) => {
     const { password, passwordMatch, username, fullName, bio, website, ethAddress } = req.body;
+
+    if (req.fileValidationError) return next(createError(400, req.fileValidationError));
 
     if (password && password !== passwordMatch) {
         return next(createError(400, 'Passwords do not match'))

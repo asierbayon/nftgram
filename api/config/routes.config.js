@@ -18,7 +18,7 @@ router.post('/logout', users.logout);
 router.get('/profile', secure.isAuthenticated, users.profile);
 
 router.get('/users', users.search);
-router.put('/users', storage.single('avatar'), users.update);
+router.put('/users', secure.isAuthenticated, storage.single('avatar'), users.update);
 router.post('/users',  users.create);
 router.get('/:username', users.get);
 router.delete('/users/:id', secure.isAuthenticated, users.delete);
