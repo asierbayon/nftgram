@@ -51,6 +51,7 @@ function RegisterForm() {
       password: ''
     },
     errors: {
+      fullName: validations.fullName(),
       username: validations.username(),
       email: validations.email(),
       password: validations.password()
@@ -141,9 +142,7 @@ function RegisterForm() {
         <div className="invalid-feedback">{errors.password}</div>
       </div>
 
-      <div className="d-grid gap-2">
-        <button className="btn btn-primary" type="submit" disabled={!isValid()}>Register</button>
-      </div>
+      <button className="btn btn-primary w-100 p-2" type="submit" disabled={!isValid()}>Register</button>
 
     </form>
   );
