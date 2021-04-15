@@ -5,6 +5,9 @@ const Asset = require('../models/asset.model');
 const Comment = require('../models/comment.model');
 const Follow = require('../models/follow.model');
 const Like = require('../models/like.model');
+const multer = require('multer');
+const cloudinary = require("cloudinary").v2;
+
 
 module.exports.create = (req, res, next) => {
     User.findOne({ email: req.body.email })
@@ -62,11 +65,23 @@ module.exports.delete = (req, res, next) => {
 }
 
 module.exports.update = (req, res, next) => {
-    const { id } = req.params;
+    const { password, passwordMatch, username, fullName, bio, website, ethAddress } = req.body;
 
-    User.findByIdAndUpdate(id, req.body, { new: true })
-        .then(user => res.status(202).json(user))
-        .catch(next)
+    if (password && password !== passwordMatch) {
+        return next(createError(400, 'Passwords do not match'))
+    } else {
+        const updateFields = { username, fullName, bio, website, ethAddress };
+        if (req.file) {
+            updateFields.avatar = req.file.path;
+        }
+        if (password) {
+            updateFields.password = password;
+        }
+        Object.assign(req.user, updateFields);
+        User.findByIdAndUpdate(req.user.id, req.user, { runValidators: true, new: true })
+            .then(user => res.status(202).json(user))
+            .catch(next)
+    }
 }
 
 module.exports.logout = (req, res, next) => {
@@ -132,3 +147,42 @@ module.exports.delete = async (req, res, next) => {
 
     res.status(204).json({ message: 'Your account has been removed' })
 }
+
+
+/*
+const multerStorage = multer.memoryStorage();
+
+const multerFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith('image')) {
+        cb(null, true);
+    } else {
+        cb(next(createError('Please upload images only', 400), false));
+    }
+};
+
+const upload = multer({
+    storage: multerStorage,
+    fileFilter: multerFilter,
+    limits: {
+        fileSize: 5000000, // 5MB
+    },
+});
+
+exports.uploadUserProfile = upload.single('avatar');
+
+exports.resizeUserImage = async (req, res, next) => {
+    if (!req.hasOwnProperty('file')) {
+        return next();
+    }
+    req.file.filename = `user-${req.user.id}-${new Date(
+        Date.now()
+    ).getTime()}.jpg`;
+
+    await sharp(req.file.buffer)
+        .resize(500, 500)
+        .toFormat('jpeg')
+        .jpeg({ quality: 90 })
+        .toFile(`public/img/user-profiles/${req.file.filename}`);
+
+    return next();
+}; */

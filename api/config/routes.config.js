@@ -6,6 +6,7 @@ const users = require('../controllers/users.controller');
 const follow = require('../controllers/follow.controller');
 const like = require('../controllers/like.controller');
 const comment = require('../controllers/comment.controller');
+const storage = require('../config/storage.config');
 
 router.get('/feed', assets.feed);
 router.get('/assets/:id', assets.get);
@@ -17,7 +18,8 @@ router.post('/logout', users.logout);
 router.get('/profile', secure.isAuthenticated, users.profile);
 
 router.get('/users', users.search);
-router.post('/users', users.create); // TBC: Change to '/'
+router.put('/users', storage.single('avatar'), users.update);
+router.post('/users',  users.create);
 router.get('/:username', users.get);
 router.delete('/users/:id', secure.isAuthenticated, users.delete);
 
