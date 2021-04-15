@@ -21,8 +21,9 @@ const storage = new CloudinaryStorage({
 });
 
 const fileFilter = (req, file, cb) => {
+    const validExtentions = ['.png', 'jpg', 'jpeg', 'gif'];
     const ext = file.originalname.split('.').pop();
-    if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
+    if (!validExtentions.includes(ext)) {
         req.fileValidationError = 'Please, upload a valid image';
         return cb(null, false, req.fileValidationError);
     }
