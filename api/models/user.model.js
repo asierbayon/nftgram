@@ -53,10 +53,18 @@ const userSchema = new Schema({
         type: String,
         maxlength: [65, 'This URL is too long.'],
     },
+    ethAddress: {
+        type: String,
+        validate: (value) => {
+            if (!validator.isEthereumAddress(value)) {
+                throw new Error('Invalid Ethereum address.');
+            }
+        },
+    },
     password: {
         type: String,
         required: 'A valid password is required.',
-        match: [PASSWORD_PATTERN, 'the password is invalid.']
+        match: [PASSWORD_PATTERN, 'Invalid password']
     }
 }, {
     timestamps: true,
