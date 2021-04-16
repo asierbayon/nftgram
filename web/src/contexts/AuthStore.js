@@ -6,20 +6,20 @@ const AuthContext = createContext();
 
 function AuthStore({ children }) {
 
-  const [user, setUser] = useState(localStorage.getItem(currentUserStorageKey) ? JSON.parse(localStorage.getItem(currentUserStorageKey)) : undefined);
+  const [currentUser, setUser] = useState(localStorage.getItem(currentUserStorageKey) ? JSON.parse(localStorage.getItem(currentUserStorageKey)) : undefined);
 
-  const handleUserChange = useCallback((user) => {
-    if (user) localStorage.setItem(currentUserStorageKey, JSON.stringify(user));
+  const handleUserChange = useCallback((currentUser) => {
+    if (currentUser) localStorage.setItem(currentUserStorageKey, JSON.stringify(currentUser));
     else localStorage.removeItem(currentUserStorageKey);
-    setUser(user);
+    setUser(currentUser);
   }, []);
 
   const isAuthenticated = useCallback(() => {
-    return user && user.email;
-  }, [user])
+    return currentUser && currentUser.email;
+  }, [currentUser])
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, onUserChange: handleUserChange }} >
+    <AuthContext.Provider value={{ currentUser, isAuthenticated, onUserChange: handleUserChange }} >
       {children}
     </AuthContext.Provider>
   );

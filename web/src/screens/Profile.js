@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import usersService from '../services/users-service';
 import { useParams } from 'react-router';
+import { AuthContext } from '../contexts/AuthStore';
 
 function Profile() {
 
+  const { currentUser } = useContext(AuthContext);
   const params = useParams();
 
   const [state, setstate] = useState({
@@ -65,7 +67,6 @@ function Profile() {
 
   const { user, assets, isFollowing } = state;
   if (user.website) user.displayUrl = user.website.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
-  console.log(assets)
 
   return (
     <div className="d-flex flex-column align-items-center">
@@ -96,6 +97,8 @@ function Profile() {
         <div className="row">
           {isFollowing
             ? <button className="btn btn-success col" onClick={handleFollow}>Following</button>
+            : (currentUser.id === user.id) 
+            ? <button className="btn btn-dark col" onClick={handleFollow}>Edit profile</button>
             : <button className="btn btn-primary col" onClick={handleFollow}>Follow</button>
           }
         </div>
