@@ -9,6 +9,7 @@ function Profile() {
   const [state, setstate] = useState({
     user: {},
     assets: [],
+    isFollowing: false,
     loading: false
   });
 
@@ -22,8 +23,10 @@ function Profile() {
       const user = await usersService.user(username);
       if (!isUnmounted) {
         setstate({
+          ...state,
           user: user.user,
           assets: user.assets,
+          isFollowing: user.isFollowing,
           loading: false
         })
       }
@@ -37,7 +40,30 @@ function Profile() {
     }
   }, [])
 
-  const { user, assets } = state;
+  const handleFollow = async () => {
+    const { username } = params;
+
+    if (!state.isFollowing) {
+      await usersService.follow(username);
+      state.user.followersCount += 1;
+      setstate({
+        ...state,
+        user,
+        isFollowing: true
+      })
+    }
+    else {
+      await usersService.unfollow(username);
+      state.user.followersCount -= 1;
+      setstate({
+        ...state,
+        user,
+        isFollowing: false
+      })
+    }
+  }
+
+  const { user, assets, isFollowing } = state;
   if (user.website) user.displayUrl = user.website.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
   console.log(assets)
 
@@ -68,11 +94,14 @@ function Profile() {
           <a target="_blank" rel="nofollow" href={user.website}>{user.displayUrl}</a>
         </div>
         <div className="row">
-          <button className="btn btn-primary col">Follow</button>
+          {isFollowing
+            ? <button className="btn btn-success col" onClick={handleFollow}>Following</button>
+            : <button className="btn btn-primary col" onClick={handleFollow}>Follow</button>
+          }
         </div>
         <div className="mt-5 row row-cols-3 g-0">
           {assets.map(asset => (
-            <img key={asset.id} src={asset.image} alt={asset.title} style={{ objectFit: 'cover' }}/>
+            <img key={asset.id} src={asset.image} alt={asset.title} style={{ objectFit: 'cover' }} />
           ))}
         </div>
       </div>

@@ -6,10 +6,15 @@ export const login = (email, password) => http.post('/login', { email, password 
 
 export const user = (user) => http.get(`/${user}`);
 
+export const follow = (user) => http.post(`/${user}/follow`);
+export const unfollow = (user) => http.delete(`/${user}/follow`);
+
 const service = {
   register,
   login,
   user,
+  follow,
+  unfollow
 }
 
 export default service;
