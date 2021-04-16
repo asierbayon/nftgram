@@ -77,11 +77,11 @@ function Profile() {
           <div className="row col">
             <div className="col text-center">
               <h5>{assets.length}</h5>
-              <small className="text-muted">posts</small>
+              <small className="text-muted">{assets.length !== 1 ? 'posts' : 'post'}</small>
             </div>
             <div className="col text-center">
               <h5>{user.followersCount}</h5>
-              <small className="text-muted">followers</small>
+              <small className="text-muted">{user.followersCount !== 1 ? 'followers' : 'follower'}</small>
             </div>
             <div className="col text-center">
               <h5>{user.followingCount}</h5>
