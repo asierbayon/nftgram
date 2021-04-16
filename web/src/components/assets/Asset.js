@@ -1,6 +1,27 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import assetsService from '../../services/assets-service'
 
-function Asset({ asset: { title, image, likes, likedByMe, comments, owner, id } }) {
+function Asset({ asset }) {
+
+  const [state, setState] = useState({
+    likes: asset.likes,
+    likedByMe: asset.likedByMe
+  })
+
+  const handleLike = async () => {
+    if (!state.likedByMe) {
+      await assetsService.like(id)
+      setState({
+        likes: likes + 1,
+        likedByMe: true
+      })
+
+    }
+  }
+
+  const { likes, likedByMe } = state;
+  const { owner, image, comments, title, id } = asset;
 
   return (
     <div>
@@ -12,8 +33,12 @@ function Asset({ asset: { title, image, likes, likedByMe, comments, owner, id } 
       </Link>
       <img src={image} alt={title} style={{ width: 400 }} />
       <div className="d-flex flex-row align-items-center p-2">
-        <h6 className="me-4"><i class={`fs-5 ${likedByMe ? 'text-danger fas fa-heart me-2' : 'far fa-heart me-2'}`}></i>{likes}</h6>
-        <h6><i class="fs-5 far fa-comment me-2"></i>{comments}</h6>
+        <h6 className="me-4">
+          <i className={`fs-5 ${likedByMe ? 'text-danger fas fa-heart me-2' : 'far fa-heart me-2'}`}
+            onClick={handleLike} />
+          {likes}
+        </h6>
+        <h6><i className="fs-5 far fa-comment me-2"></i>{comments}</h6>
       </div>
 
     </div >

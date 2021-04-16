@@ -16,7 +16,6 @@ function AssetsFeed() {
         loading: true
       }));
       const assets = await assetsService.feed();
-      console.log(assets)
       if (!isUnmounted) {
         setstate({
           assets,
