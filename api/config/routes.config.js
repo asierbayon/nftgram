@@ -29,8 +29,8 @@ router.delete('/:username/follow', secure.isAuthenticated, follow.unfollowUser);
 router.get('/:username/followers', follow.listFollowers);
 router.get('/:username/following', follow.listFollowing);
 
-router.post('/assets/:id/like', secure.isAuthenticated, like.likePost);
-router.delete('/assets/:id/unlike', secure.isAuthenticated, like.unlikePost);
+router.post('/assets/:id/likes', secure.isAuthenticated, like.likePost);
+router.delete('/assets/:id/likes', secure.isAuthenticated, like.unlikePost);
 router.get('/assets/:id/likes', like.listLikes);
 
 router.post('/assets/:id/comments', secure.isAuthenticated, comment.create);
