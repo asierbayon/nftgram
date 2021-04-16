@@ -30,9 +30,17 @@ module.exports.get = async (req, res, next) => {
 
         const assets = await Asset.find({ owner: user.id }, 'image');
 
+        let isFollowing = false;
+
+        if (req.user) {
+          const isFollower = await Follow.findOne({ user: req.user.id, following: user.id })
+          if (isFollower) isFollowing = true;
+        }
+
         return res.status(200).json({
             user,
-            assets
+            assets,
+            isFollowing
         });
 
     } catch (error) {
