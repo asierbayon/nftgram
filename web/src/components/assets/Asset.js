@@ -4,6 +4,8 @@ import assetsService from '../../services/assets-service'
 
 function Asset({ asset }) {
 
+  const { owner, image, comments, title, id } = asset;
+
   const [state, setState] = useState({
     likes: asset.likes,
     likedByMe: asset.likedByMe
@@ -16,12 +18,16 @@ function Asset({ asset }) {
         likes: likes + 1,
         likedByMe: true
       })
-
+    } else {
+      await assetsService.unlike(id)
+      setState({
+        likes: likes - 1,
+        likedByMe: false
+      })
     }
   }
 
   const { likes, likedByMe } = state;
-  const { owner, image, comments, title, id } = asset;
 
   return (
     <div>
