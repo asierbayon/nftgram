@@ -98,7 +98,8 @@ function RegisterForm() {
         await register(user);
         history.push('/login', { email: user.email });
       } catch (error) {
-        const { errors } = error && error.response ? error.response.data : error;
+        const { message, errors } = error.response ? error.response.data : error;
+        console.error(message, error);
         setState(state => ({
           ...state,
           errors
@@ -127,7 +128,7 @@ function RegisterForm() {
       </div>
 
       <div className="form-floating mb-3">
-        <input type="email" className="form-control" id="email" placeholder="name@example.com"
+        <input type="email" id="email" placeholder="name@example.com"
           name="email" className={`form-control ${touch.email && errors.email ? 'is-invalid' : ''}`}
           onBlur={handleBlur} onChange={handleChange} value={user.email} />
         <label htmlFor="email">Email address</label>
@@ -135,7 +136,7 @@ function RegisterForm() {
       </div>
 
       <div className="form-floating mb-3">
-        <input type="password" className="form-control" id="password" name="password"
+        <input type="password" id="password" name="password"
           className={`form-control ${touch.password && errors.password ? 'is-invalid' : ''}`}
           placeholder="Password" onBlur={handleBlur} onChange={handleChange} value={user.password} />
         <label htmlFor="password">Password</label>
