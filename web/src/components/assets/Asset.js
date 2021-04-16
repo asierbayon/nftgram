@@ -37,7 +37,7 @@ function Asset({ asset }) {
           <h6>{owner.username}</h6>
         </div>
       </Link>
-      <img src={image} alt={title} style={{ width: 400 }} />
+      <img src={image} alt={title} style={{ width: 400 }} onDoubleClick={handleLike} />
       <div className="d-flex flex-row align-items-center p-2">
         <h6 className="me-4">
           <i className={`fs-5 ${likedByMe ? 'text-danger fas fa-heart me-2' : 'far fa-heart me-2'}`}
