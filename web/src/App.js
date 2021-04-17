@@ -4,7 +4,7 @@ import Login from './screens/Login';
 import Register from './screens/Register';
 import AuthStore from './contexts/AuthStore';
 import Feed from './screens/Feed';
-import Profile from './screens/Profile';
+import User from './screens/User';
 
 function App() {
   return (
@@ -14,7 +14,7 @@ function App() {
           <Route exact path="/" component={Feed} />
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
-          <Route exact path="/:username" component={Profile} />
+          <Route exact path="/:username" component={User} />
         </Switch>
       </AuthStore>
     </Router>

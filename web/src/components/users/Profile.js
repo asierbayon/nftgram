@@ -1,7 +1,7 @@
 import { useState, useEffect, useContext } from 'react';
-import usersService from '../services/users-service';
+import usersService from '../../services/users-service';
 import { useParams } from 'react-router';
-import { AuthContext } from '../contexts/AuthStore';
+import { AuthContext } from '../../contexts/AuthStore';
 
 function Profile() {
 
