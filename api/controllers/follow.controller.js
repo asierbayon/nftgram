@@ -82,7 +82,7 @@ module.exports.listFollowers = async (req, res, next) => {
       return {
         ...follower,
         isMe: follower.user.id == currentUser.id,
-        AmIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == follower.user.id )
+        amIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == follower.user.id )
       }
     })
 
@@ -127,7 +127,7 @@ module.exports.listFollowing = async (req, res, next) => {
       return {
         ...following,
         isMe: following.following.id == currentUser.id,
-        AmIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == following.following.id )
+        amIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == following.following.id )
       }
     })
 
