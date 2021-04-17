@@ -76,12 +76,9 @@ module.exports.listFollowers = async (req, res, next) => {
         }
       }).select('username followers');
 
-    console.log(currentUser.following)
-
     newUser.followers = newUser.followers.map(follower => {
       return {
         ...follower,
-        isMe: follower.user.id == currentUser.id,
         amIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == follower.user.id )
       }
     })
@@ -122,11 +119,8 @@ module.exports.listFollowing = async (req, res, next) => {
       }).select('username followers');
 
     newUser.following = newUser.following.map(following => {
-      console.log(following.following.id, currentUser.id)
-
       return {
         ...following,
-        isMe: following.following.id == currentUser.id,
         amIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == following.following.id )
       }
     })
