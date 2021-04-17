@@ -19,7 +19,7 @@ passport.use('local-auth', new LocalStrategy({
   User.findOne({ email })
     .then(user => {
       if (!user) {
-        next(null, null, { email: 'Invalid email or password'})
+        next(null, null, { email: 'Invalid email or password' })
       } else {
         return user.checkPassword(password)
           .then(match => {
