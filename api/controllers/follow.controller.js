@@ -88,8 +88,6 @@ module.exports.listFollowers = async (req, res, next) => {
 
   }
 
-
-
   res.status(200).json(newUser);
 
 }
@@ -107,5 +105,33 @@ module.exports.listFollowing = async (req, res, next) => {
     }).select('username followers');
 
   if (!user) return next(createError(400, 'User not found'));
-  res.status(200).json(user.following);
+
+  const newUser = user.toObject();
+
+  let currentUser;
+
+  if (req.user) {
+    currentUser = await User.findById(req.user.id)
+      .populate({
+        path: 'following',
+        select: 'following -user',
+        populate: {
+          path: 'following',
+          select: 'username fullName avatar'
+        }
+      }).select('username followers');
+
+    newUser.following = newUser.following.map(following => {
+      console.log(following.following.id, currentUser.id)
+
+      return {
+        ...following,
+        isMe: following.following.id == currentUser.id,
+        AmIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == following.following.id )
+      }
+    })
+
+  }
+
+  res.status(200).json(newUser.following);
 }
