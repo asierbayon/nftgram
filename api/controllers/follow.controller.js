@@ -59,7 +59,7 @@ module.exports.listFollowers = async (req, res, next) => {
     }).select("username followers");
 
   if (!user) return next(createError(400, 'User not found'));
-
+  console.log(user)
   const newUser = user.toObject();
 
 
@@ -79,13 +79,12 @@ module.exports.listFollowers = async (req, res, next) => {
     newUser.followers = newUser.followers.map(follower => {
       return {
         ...follower,
-        amIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == follower.user.id )
+        amIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == follower.user.id)
       }
     })
-
   }
 
-  res.status(200).json(newUser);
+  res.status(200).json(newUser.followers);
 
 }
 
@@ -121,9 +120,14 @@ module.exports.listFollowing = async (req, res, next) => {
     newUser.following = newUser.following.map(following => {
       return {
         ...following,
-        amIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == following.following.id )
+        amIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == following.following.id)
       }
     })
+    
+   /*  newUser.following.map(following => {
+      following.user = following.following;
+      delete following.following;
+    }) */
 
   }
 
