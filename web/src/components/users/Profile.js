@@ -96,11 +96,11 @@ function Profile() {
                 <h5>{assets.length}</h5>
                 <small className="text-muted">{assets.length !== 1 ? 'posts' : 'post'}</small>
               </div>
-              <div onClick={() => handleShowFollows('followers')} className="col text-center text-dark">
+              <div onClick={() => handleShowFollows('followers')} className="col text-center text-dark cursor-pointer">
                 <h5>{user.followersCount}</h5>
                 <small className="text-muted">{user.followersCount !== 1 ? 'followers' : 'follower'}</small>
               </div>
-              <div onClick={() => handleShowFollows('following')} className="col text-center text-dark">
+              <div onClick={() => handleShowFollows('following')} className="col text-center text-dark cursor-pointer">
                 <h5>{user.followingCount}</h5>
                 <small className="text-muted">following</small>
               </div>
