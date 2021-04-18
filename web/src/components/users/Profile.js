@@ -13,7 +13,8 @@ function Profile() {
     assets: [],
     isFollowing: false,
     loading: false,
-    showFollowing: false
+    showFollowing: false,
+    usersToDisplay: ''
   });
 
   useEffect(() => {
@@ -64,23 +65,25 @@ function Profile() {
     }
   }
 
-  const handleShowFollows = () => {
+  const handleShowFollows = (usersToDisplay) => {
     state.showFollowing
       ? setstate(state => ({
         ...state,
-        showFollowing: false
+        showFollowing: false,
+        usersToDisplay: ''
       }))
       : setstate(state => ({
         ...state,
-        showFollowing: true
+        showFollowing: true,
+        usersToDisplay
       }))
   }
 
   const { currentUser } = useContext(AuthContext);
-  const { user, assets, isFollowing, showFollowing } = state;
+  const { user, assets, isFollowing, showFollowing, usersToDisplay } = state;
   if (user.website) user.displayUrl = user.website.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
 
-  if (showFollowing) return <Follows handleShowFollows={handleShowFollows} />
+  if (showFollowing) return <Follows handleShowFollows={handleShowFollows} usersToDisplay={usersToDisplay}/>
   else {
     return (
       <div className="d-flex flex-column align-items-center">
@@ -93,11 +96,11 @@ function Profile() {
                 <h5>{assets.length}</h5>
                 <small className="text-muted">{assets.length !== 1 ? 'posts' : 'post'}</small>
               </div>
-              <div className="col text-center text-dark">
+              <div onClick={() => handleShowFollows('followers')} className="col text-center text-dark">
                 <h5>{user.followersCount}</h5>
                 <small className="text-muted">{user.followersCount !== 1 ? 'followers' : 'follower'}</small>
               </div>
-              <div onClick={handleShowFollows} className="col text-center text-dark">
+              <div onClick={() => handleShowFollows('following')} className="col text-center text-dark">
                 <h5>{user.followingCount}</h5>
                 <small className="text-muted">following</small>
               </div>

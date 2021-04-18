@@ -8,6 +8,7 @@ export const user = (user) => http.get(`/${user}`);
 export const follow = (user) => http.post(`/${user}/follow`);
 export const unfollow = (user) => http.delete(`/${user}/follow`);
 export const following = (user) => http.get(`/${user}/following`);
+export const followers = (user) => http.get(`/${user}/followers`);
 
 const service = {
   register,
@@ -15,7 +16,8 @@ const service = {
   user,
   follow,
   unfollow,
-  following
+  following,
+  followers
 }
 
 export default service;

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import FollowButton from '../buttons/FollowButton'
 
 function UserCard({ user, followers, amIFollowing, className, handleShowFollows, handleFollow }) {
-
+  console.log('user', user)
   return (
     <div className={`row border py-3 ${className}`}>
       <Link to={`/${user.username}`} onClick={handleShowFollows} className="col-8">
