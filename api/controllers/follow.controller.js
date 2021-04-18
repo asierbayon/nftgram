@@ -59,9 +59,8 @@ module.exports.listFollowers = async (req, res, next) => {
     }).select("username followers");
 
   if (!user) return next(createError(400, 'User not found'));
-  console.log(user)
-  const newUser = user.toObject();
 
+  const newUser = user.toObject();
 
   let currentUser;
 
@@ -123,11 +122,6 @@ module.exports.listFollowing = async (req, res, next) => {
         amIFollowing: currentUser.following.some(userIAmFollowing => userIAmFollowing.following.id == following.following.id)
       }
     })
-    
-   /*  newUser.following.map(following => {
-      following.user = following.following;
-      delete following.following;
-    }) */
 
   }
 
