@@ -10,7 +10,7 @@ function Follows({ handleShowFollows, handleFollow, usersToDisplay }) {
     users: [],
     loading: false
   })
-  console.log(usersToDisplay)
+
   useEffect(() => {
     async function fetchFollowing() {
       setstate(state => ({
@@ -37,7 +37,7 @@ function Follows({ handleShowFollows, handleFollow, usersToDisplay }) {
     return () => {
       isUnmounted = true;
     }
-  }, [])
+  }, [params, usersToDisplay])
 
   const { users } = state;
 

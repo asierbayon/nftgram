@@ -110,7 +110,7 @@ function Profile() {
           <div className="mb-3">
             <h6>{user.fullName}</h6>
             <p><small className="text-muted">{user.bio}</small></p>
-            <a target="_blank" rel="nofollow" href={user.website}>{user.displayUrl}</a>
+            <a target="_blank" rel="noreferrer nofollow" href={user.website}>{user.displayUrl}</a>
           </div>
           {isFollowing
             ? <button className="btn btn-success w-100" onClick={handleFollowers}>Following</button>

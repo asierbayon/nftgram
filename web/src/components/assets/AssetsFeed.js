@@ -32,7 +32,7 @@ function AssetsFeed() {
     }
   }, [])
 
-  const { assets, loading } = state;
+  const { assets } = state;
 
   return (
     <div className="w-100 d-flex flex-column align-items-center">

@@ -37,7 +37,7 @@ function SingleAsset() {
     return () => {
       isUnmounted = true;
     }
-  }, [])
+  }, [params])
 
   const { asset } = state;
 
