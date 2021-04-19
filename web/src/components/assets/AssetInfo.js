@@ -4,10 +4,13 @@ function AssetInfo({ asset }) {
     <div>
       <h4>{asset.title}</h4>
       <p><a target="_blank" rel="noreferrer" href={`${asset.url}`}>View on OpenSea</a></p>
-      <img src={owner.avatar} alt={owner.username} style={{ width: 40 }}/>
-      <h6>{owner.username}</h6>
-      <small>{owner.fullName}</small>
-
+      <div className="row">
+        <img src={owner.avatar} alt={owner.username} style={{ maxWidth: 60 }} className="col-3" />
+        <div className="col">
+          <h6>{owner.username}</h6>
+          <small>{owner.fullName}</small>
+        </div>
+      </div>
     </div>
   )
 }
