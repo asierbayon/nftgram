@@ -8,7 +8,7 @@ const like = require('../controllers/like.controller');
 const comment = require('../controllers/comment.controller');
 const storage = require('../config/storage.config');
 
-router.get('/feed', assets.feed);
+router.get('/feed', secure.isAuthenticated, assets.feed);
 router.get('/assets/:id', assets.get);
 router.post('/assets', secure.isAuthenticated, assets.create);
 router.delete('/assets/:id', secure.isAuthenticated, assets.delete);
