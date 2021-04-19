@@ -2,6 +2,7 @@ import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthStore';
 import usersService from '../../services/users-service';
 import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 import Follows from './Follows';
 
 function Profile() {
@@ -83,7 +84,7 @@ function Profile() {
   const { user, assets, isFollowing, showFollowing, usersToDisplay } = state;
   if (user.website) user.displayUrl = user.website.replace(/^(?:https?:\/\/)?(?:www\.)?/i, "").split('/')[0];
 
-  if (showFollowing) return <Follows handleShowFollows={handleShowFollows} usersToDisplay={usersToDisplay}/>
+  if (showFollowing) return <Follows handleShowFollows={handleShowFollows} usersToDisplay={usersToDisplay} />
   else {
     return (
       <div className="d-flex flex-column align-items-center">
@@ -119,7 +120,9 @@ function Profile() {
           }
           <div className="mt-5 row row-cols-3 g-0">
             {assets.map(asset => (
-              <img key={asset.id} src={asset.image} alt={asset.title} style={{ objectFit: 'cover' }} />
+              <Link to={`/asset/${asset.id}`} >
+                <img key={asset.id} src={asset.image} alt={asset.title} style={{ width: '100%', objectFit: 'cover' }} />
+              </Link>
             ))}
           </div>
         </div>

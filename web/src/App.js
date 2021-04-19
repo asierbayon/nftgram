@@ -5,6 +5,7 @@ import Register from './screens/Register';
 import AuthStore from './contexts/AuthStore';
 import Feed from './screens/Feed';
 import User from './screens/User';
+import SingleAsset from './screens/SingleAsset';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/:username" component={User} />
+          <Route exact path="/asset/:id" component={SingleAsset} />
         </Switch>
       </AuthStore>
     </Router>
