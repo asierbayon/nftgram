@@ -1,5 +1,3 @@
-import React from 'react'
-
 function AssetInfo({ asset }) {
   const { owner } = asset;
   return (

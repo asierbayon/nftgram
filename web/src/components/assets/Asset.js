@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import assetsService from '../../services/assets-service'
+import LikeButton from '../buttons/LikeButton';
 
 function Asset({ asset }) {
 
@@ -39,11 +40,7 @@ function Asset({ asset }) {
       </Link>
       <img src={image} alt={title} style={{ width: 400 }} onDoubleClick={handleLike} />
       <div className="d-flex flex-row align-items-center p-2">
-        <h6 className="me-4">
-          <i className={`fs-5 ${likedByMe ? 'text-danger fas fa-heart me-2' : 'far fa-heart me-2'}`}
-            onClick={handleLike} />
-          {likes}
-        </h6>
+        <LikeButton handleLike={handleLike} likedByMe={likedByMe} likes={likes} />
         <h6><i className="fs-5 far fa-comment me-2"></i>{comments}</h6>
       </div>
 
