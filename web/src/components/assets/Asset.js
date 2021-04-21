@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
 import assetsService from '../../services/assets-service'
 import LikeButton from '../buttons/LikeButton';
 import ShareButton from '../buttons/ShareButton';

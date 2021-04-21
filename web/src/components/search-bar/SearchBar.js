@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import usersService from '../../services/users-service';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
 
 function SearchBar() {
 
@@ -20,7 +21,11 @@ function SearchBar() {
 
   const handleSearch = async (event) => {
     event.preventDefault();
-    await fetchUsers(event.target.value);
+    if (event.target.value.length > 0) await fetchUsers(event.target.value);
+    else setstate({
+      users: [],
+      displayUsers: false
+    })
   }
 
   const handleDisplayUsers = () => {
@@ -36,18 +41,30 @@ function SearchBar() {
   }
 
   const { displayUsers, users } = state;
-  
+
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen((prev) => !prev);
+  };
+  console.log(open)
+  const handleClickAway = () => {
+    setOpen(false);
+  };
+
   return (
     <div>
-      <div className="mb-3 row">
+      <div className="row">
         <div className="col-sm-10">
-          <input type="text" className="form-control" id="search" onChange={handleSearch} />
+          <ClickAwayListener onClickAway={handleClickAway}>
+            <input onClick={handleClick} placeholder="Search users..." type="text" className="form-control" id="search" autoComplete="off" onChange={handleSearch} />
+          </ClickAwayListener>
         </div>
       </div>
-      {displayUsers
-        ? <div className="bg-light" style={{ height: 100, position: 'relative', zIndex: 999 }}>
+      {displayUsers && open
+        ? <div className="bg-light" style={{ height: 100, position: 'absolute', zIndex: 999 }}>
           {users.users.map(user => (
-            <Link to={`/${user.username}`} onClick={handleDisplayUsers} className="row">
+            <Link to={`/${user.username}`} onClick={() => { handleDisplayUsers(); handleClick() }} className="row">
               <img src={user.avatar} className="col-3" alt="" style={{ maxWidth: 50 }} />
               <div className="col">
                 <p>{user.username}</p>

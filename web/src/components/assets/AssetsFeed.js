@@ -36,7 +36,6 @@ function AssetsFeed() {
 
   return (
     <div className="w-100 d-flex flex-column align-items-center">
-      Feed
       {assets.map(asset => (
         <div key={asset.id} className="mt-3">
           <Asset asset={asset}/>
