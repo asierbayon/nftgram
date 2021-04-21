@@ -16,7 +16,10 @@ function Navbar() {
           <i className="fas fa-camera-retro me-3"></i>
           NFTGram
         </a>
+        <div className="w-25">
         <SearchBar />
+        </div>
+        
         <ul className="navbar-nav">
           {currentUser
             ? <>

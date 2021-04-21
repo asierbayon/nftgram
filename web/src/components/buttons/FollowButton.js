@@ -24,7 +24,7 @@ function FollowButton({ isFollowing, user, className }) {
     <div className={`${className}`}>
       {state.isFollowing
         ? <button className="btn btn-success w-100" onClick={handleFollowings}>Following</button>
-        : (currentUser.id === user.id)
+        : (currentUser && currentUser.id === user.id)
           ? <button className="btn btn-dark w-100" >Edit profile</button>
           : <button className="btn btn-primary w-100" onClick={handleFollowings}>Follow</button>
       }

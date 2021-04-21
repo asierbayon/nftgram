@@ -56,7 +56,7 @@ function SearchBar() {
   return (
     <div>
       <div className="row">
-        <div className="col-sm-10">
+        <div>
           <ClickAwayListener onClickAway={handleClickAway}>
             <input onClick={handleClick} placeholder="Search users..." type="text" className="form-control" id="search" autoComplete="off" onChange={handleSearch} />
           </ClickAwayListener>
