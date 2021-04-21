@@ -2,6 +2,7 @@ import { useState } from 'react';
 import usersService from '../../services/users-service';
 import { Link } from 'react-router-dom';
 import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import UserChip from '../users/UserChip';
 
 function SearchBar() {
 
@@ -62,14 +63,10 @@ function SearchBar() {
         </div>
       </div>
       {displayUsers && open
-        ? <div className="bg-light" style={{ height: 100, position: 'absolute', zIndex: 999 }}>
+        ? <div className="border rounded px-3 py-1" style={{ position: 'absolute', zIndex: 999, backgroundColor: 'white' }}>
           {users.users.map(user => (
             <Link to={`/${user.username}`} onClick={() => { handleDisplayUsers(); handleClick() }} className="row">
-              <img src={user.avatar} className="col-3" alt="" style={{ maxWidth: 50 }} />
-              <div className="col">
-                <p>{user.username}</p>
-                <p>{user.fullName}</p>
-              </div>
+              <UserChip user={user} />
             </Link>
           ))}
         </div>
