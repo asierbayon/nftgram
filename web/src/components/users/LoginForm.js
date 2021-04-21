@@ -97,7 +97,7 @@ function LoginForm() {
   const { user, errors, touch } = state;
 
   return (
-    <form className="mt-3 mb-3" onSubmit={handleSubmit} >
+    <form className="mt-3 mb-3" onSubmit={handleSubmit}>
 
       <div className="form-floating mb-3">
         <input type="email" id="email" placeholder="name@example.com"
@@ -115,8 +115,8 @@ function LoginForm() {
         <div className="invalid-feedback">{errors.password}</div>
       </div>
 
-      <div className="d-grid gap-2">
-        <button className="btn btn-primary" type="submit">Login</button>
+      <div className="d-grid">
+        <button className="btn btn-primary p-2" type="submit">Login</button>
       </div>
 
     </form>

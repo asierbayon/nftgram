@@ -36,7 +36,7 @@ function SearchBar() {
   }
 
   const { displayUsers, users } = state;
-  console.log(users, displayUsers)
+  
   return (
     <div>
       <div className="mb-3 row">

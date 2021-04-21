@@ -3,12 +3,15 @@ import LoginForm from '../components/users/LoginForm';
 
 function Login() {
   return (
-    <div className="row">
+    <div className="row" style={{ marginTop: '100px' }}>
       <div className="col-12 col-sm-4 mx-auto">
+        <div className="py-2">
+          <h3>Sign in</h3>
+          <p>Enter your details below.</p>
+        </div>
         <LoginForm />
-        <hr />
-        <div className="d-grid gap-2">
-          <Link className="btn btn-secondary" type="button" to="/register">Register</Link>
+        <div className="text-center">
+          <h6>Don't you have an account? <Link to="/register">Register</Link></h6>
         </div>
       </div>
     </div>

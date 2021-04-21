@@ -114,8 +114,8 @@ function Profile() {
           </div>
           {isFollowing
             ? <button className="btn btn-success w-100" onClick={handleFollowers}>Following</button>
-            : (currentUser.id === user.id)
-              ? <button className="btn btn-dark w-100" >Edit profile</button>
+            : (currentUser && currentUser.id === user.id)
+              ? <Link to={`/${currentUser.username}/edit`} className="btn btn-dark w-100" >Edit profile</Link>
               : <button className="btn btn-primary w-100" onClick={handleFollowers}>Follow</button>
           }
           <div className="mt-5 row row-cols-3 g-0">
