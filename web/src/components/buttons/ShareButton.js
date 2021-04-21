@@ -13,15 +13,20 @@ function ShareButton({ id }) {
     url.select()
     document.execCommand("copy")
     url.remove();
-    setstate(state => ({
+    setstate(({
       urlCopied: true
     }))
+    setTimeout(() => {
+      setstate({
+        urlCopied: false
+      });
+    }, 2000);
   }
-
+  
   return (
     <div className="border rounded-pill px-4 py-2 cursor-pointer" onClick={copyLinkToClipboard}>
       <h6 className="text-muted">
-        Share
+        {state.urlCopied ? 'URL copied!' : 'Share'}
         <i class="fas fa-share-alt ms-3"></i>
       </h6>
     </div>
