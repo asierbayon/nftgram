@@ -120,7 +120,7 @@ function Profile() {
           }
           <div className="mt-5 row row-cols-3 g-0">
             {assets.map(asset => (
-              <Link to={`/asset/${asset.id}`} >
+              <Link to={`/assets/${asset.id}`} >
                 <img key={asset.id} src={asset.image} alt={asset.title} style={{ width: '100%', objectFit: 'cover' }} />
               </Link>
             ))}

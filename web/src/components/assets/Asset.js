@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import assetsService from '../../services/assets-service'
 import LikeButton from '../buttons/LikeButton';
+import ShareButton from '../buttons/ShareButton';
+import UserChip from '../users/UserChip';
 
 function Asset({ asset }) {
 
@@ -31,20 +33,15 @@ function Asset({ asset }) {
   const { likes, likedByMe } = state;
 
   return (
-    <div>
-      <Link to={`/${owner.username}`} style={{ textDecoration: 'none', color: 'black' }}>
-        <div className="d-flex flex-row align-items-center p-2">
-          <img src={owner.avatar} alt={owner.fullName} className="rounded-circle me-3" style={{ width: 25 }} />
-          <h6>{owner.username}</h6>
-        </div>
-      </Link>
+    <div className="border p-3" style={{ borderRadius: 20 }}>
+      <UserChip user={owner} className="mb-2"/>
       <img src={image} alt={title} style={{ width: 400 }} onDoubleClick={handleLike} />
-      <div className="d-flex flex-row align-items-center p-2">
+      <div className="d-flex flex-row align-items-center justify-content-between p-2">
         <LikeButton handleLike={handleLike} likedByMe={likedByMe} likes={likes} />
+        <ShareButton id={id}/>
       </div>
-
     </div >
   )
 }
 
-export default Asset
+export default Asset;

@@ -19,7 +19,7 @@ function App() {
           <Route exact path="/register" component={Register} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/:username" component={User} />
-          <Route exact path="/asset/:id" component={SingleAsset} />
+          <Route exact path="/assets/:id" component={SingleAsset} />
           {/* <Route exact path="/:username/edit" component={EditProfile} /> */}
         </Switch>
       </AuthStore>
