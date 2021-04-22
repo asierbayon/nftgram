@@ -66,9 +66,9 @@ function SearchBar() {
       {displayUsers && open
         ? <div className="border rounded px-3 py-1" style={{ position: 'absolute', zIndex: 999, backgroundColor: 'white' }}>
           {users.users.map(user => (
-            <Link to={`/${user.username}`} onClick={() => { handleDisplayUsers(); handleClick() }} className="row">
+            <div onClick={() => { handleDisplayUsers(); handleClick() }} className="row">
               <UserChip user={user} />
-            </Link>
+            </div>
           ))}
         </div>
         : null
