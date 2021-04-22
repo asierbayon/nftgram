@@ -8,20 +8,24 @@ import User from './screens/User';
 import SingleAsset from './screens/SingleAsset';
 import Navbar from './components/nav/Navbar';
 import EditProfile from './screens/EditProfile';
+import Footer from './components/nav/Footer';
 
 function App() {
   return (
     <Router>
       <AuthStore>
         <Navbar />
-        <Switch>
-          <Route exact path="/" component={Feed} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/:username" component={User} />
-          <Route exact path="/assets/:id" component={SingleAsset} />
-          {/* <Route exact path="/:username/edit" component={EditProfile} /> */}
-        </Switch>
+        <div className="px-3 mb-5">
+          <Switch>
+            <Route exact path="/" component={Feed} />
+            <Route exact path="/register" component={Register} />
+            <Route exact path="/login" component={Login} />
+            <Route exact path="/:username" component={User} />
+            <Route exact path="/assets/:id" component={SingleAsset} />
+            <Route exact path="/:username/edit" component={EditProfile} />
+          </Switch>
+        </div>
+        <Footer />
       </AuthStore>
     </Router>
   );

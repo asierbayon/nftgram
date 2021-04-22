@@ -48,7 +48,7 @@ function SearchBar() {
   const handleClick = () => {
     setOpen((prev) => !prev);
   };
-  console.log(open)
+
   const handleClickAway = () => {
     setOpen(false);
   };
@@ -58,7 +58,8 @@ function SearchBar() {
       <div className="row">
         <div>
           <ClickAwayListener onClickAway={handleClickAway}>
-            <input onClick={handleClick} placeholder="Search users..." type="text" className="form-control" id="search" autoComplete="off" onChange={handleSearch} />
+            <input onClick={handleClick} placeholder="Search users..." type="text" className="form-control"
+              id="search" autoComplete="off" onChange={handleSearch} />
           </ClickAwayListener>
         </div>
       </div>

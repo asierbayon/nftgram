@@ -87,12 +87,12 @@ function Profile() {
   if (showFollowing) return <Follows handleShowFollows={handleShowFollows} usersToDisplay={usersToDisplay} />
   else {
     return (
-      <div className="d-flex flex-column align-items-center">
+      <div>
         <h5 className="py-3">{user.username}</h5>
-        <div style={{ width: 400 }}>
+        <div>
           <div className="row d-flex align-items-center mb-3">
             <img className="col-3 rounded-circle me-5" src={user.avatar} alt={user.username} />
-            <div className="row col">
+            <div className="row col m-0">
               <div className="col text-center">
                 <h5>{assets.length}</h5>
                 <small className="text-muted">{assets.length !== 1 ? 'posts' : 'post'}</small>
@@ -121,7 +121,7 @@ function Profile() {
           <div className="mt-5 row row-cols-3 g-0">
             {assets.map(asset => (
               <Link to={`/assets/${asset.id}`} >
-                <img key={asset.id} src={asset.image} alt={asset.title} style={{ width: '100%', objectFit: 'cover' }} />
+                <img key={asset.id} src={asset.image} alt={asset.title} style={{ width: '100%', height: 125, objectFit: 'cover', borderRadius: 5 }} />
               </Link>
             ))}
           </div>
