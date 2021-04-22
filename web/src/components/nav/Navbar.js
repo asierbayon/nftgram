@@ -1,11 +1,18 @@
 import { useContext } from 'react'
 import SearchBar from '../search-bar/SearchBar';
 import { AuthContext } from '../../contexts/AuthStore';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
+import { logout } from '../../services/users-service';
 
 function Navbar() {
 
   const { currentUser } = useContext(AuthContext);
+  const history = useHistory();
+
+  const handleLogout = async () => {
+    await logout();
+    history.push('/login');
+  }
 
   return (
     <nav className="navbar navbar-light">
@@ -23,7 +30,7 @@ function Navbar() {
                   <ul className="dropdown-menu dropdown-menu-left" style={{ position: 'absolute' }}>
                     <li><Link className="dropdown-item" to={`/${currentUser.username}`}>Profile</Link></li>
                     <li><Link className="dropdown-item" to="/settings">Settings</Link></li>
-                    <li><Link className="dropdown-item" to="/logout"><i className="comment fas fa-power-off me-2"></i> Logout</Link></li>
+                    <li onClick={handleLogout}><i className="comment fas fa-power-off me-2"></i> Logout</li>
                   </ul>
                 </li>
               </div>

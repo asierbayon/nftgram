@@ -32,9 +32,9 @@ function Asset({ asset }) {
   const { likes, likedByMe } = state;
 
   return (
-    <div className="border py-3" style={{ borderRadius: 20 }}>
+    <div className="border pt-2 pb-3" style={{ borderRadius: 20 }}>
       <UserChip user={owner} className="mb-2"/>
-      <img src={image} alt={title} style={{ width: 400 }} onDoubleClick={handleLike} />
+      <img src={image} alt={title} className="w-100" onDoubleClick={handleLike} />
       <div className="d-flex flex-row align-items-center justify-content-between mt-3 px-2">
         <LikeButton handleLike={handleLike} likedByMe={likedByMe} likes={likes} />
         <ShareButton id={id}/>

@@ -2,10 +2,10 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import FollowButton from '../buttons/FollowButton'
 
-function UserCard({ user, followers, amIFollowing, className, handleShowFollows, handleFollow }) {
+function UserCard({ user, amIFollowing, className, handleShowFollows, handleFollow }) {
   console.log('user', user)
   return (
-    <div className={`row border py-3 ${className}`}>
+    <div className={`row py-3 ${className}`}>
       <Link to={`/${user.username}`} onClick={handleShowFollows} className="col-8">
         <div className="row">
           <div className="col-4 d-flex align-items-center justify-content-center">
@@ -17,7 +17,8 @@ function UserCard({ user, followers, amIFollowing, className, handleShowFollows,
           </div>
         </div>
       </Link>
-      <FollowButton isFollowing={amIFollowing} user={user} handleFollow={handleFollow} className="col me-2" />
+      {handleShowFollows && 
+      <FollowButton isFollowing={amIFollowing} user={user} handleFollow={handleFollow} className="col me-2" />}
     </div>
   )
 }

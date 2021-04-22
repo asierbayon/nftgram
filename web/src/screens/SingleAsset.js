@@ -48,14 +48,12 @@ function SingleAsset() {
   }
   else {
     return (
-      <div className="row">
-        <div className="col">
+      <>
+        <div className="my-2 mb-3">
           <Asset asset={asset} />
         </div>
-        <div className="col">
-          <AssetInfo asset={asset} />
-        </div>
-      </div>
+        <AssetInfo asset={asset} />
+      </>
     )
   }
 }
