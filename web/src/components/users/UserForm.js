@@ -2,8 +2,16 @@ import { useState, useContext } from 'react';
 import { useHistory } from 'react-router';
 import usersService from '../../services/users-service';
 import validator from 'validator';
+import axios from 'axios';
 
 const validations = {
+  avatar: (value) => {
+    let message;
+    if (!value) {
+      message = 'Image is required';
+    }
+    return message;
+  },
   fullName: (value) => {
     let message;
     if (!value) {
@@ -39,6 +47,7 @@ function EditProfile({ user: userToEdit = {} }) {
   const history = useHistory();
   const [state, setstate] = useState({
     user: {
+      avatar: '',
       fullName: '',
       website: '',
       bio: '',
@@ -46,6 +55,7 @@ function EditProfile({ user: userToEdit = {} }) {
       ...userToEdit
     },
     errors: {
+      avatar: validations.avatar(userToEdit.avatar),
       fullName: validations.fullName(userToEdit.fullName),
       website: validations.website(userToEdit.website),
       bio: validations.bio(userToEdit.bio),
@@ -57,9 +67,22 @@ function EditProfile({ user: userToEdit = {} }) {
   const handleChange = (event) => {
     let { name, value } = event.target;
 
-    /* if (event.target.files) {
+    if (event.target.files) {
       value = event.target.files[0]
-    } */
+      const formData = new FormData();
+      formData.append('avatar', value);
+      usersService.update(formData)
+        .then(response => {
+          setstate(state => ({
+              ...state,
+              user: {
+                ...state.user,
+                avatar: response.avatar
+              }
+          }))
+        })
+        .catch(error => console.log(error))
+    }
 
     setstate(state => {
       return {
@@ -93,6 +116,7 @@ function EditProfile({ user: userToEdit = {} }) {
     if (isValid()) {
       try {
         const userData = { ...state.user };
+        console.log(userData)
         const user = await usersService.update(userData);
         history.push(`/${user.username}`);
       } catch (error) {
@@ -102,11 +126,11 @@ function EditProfile({ user: userToEdit = {} }) {
           ...state,
           errors: {
             ...errors,
-            title: !errors && message
+            fullName: !errors && message
           },
           touch: {
             ...errors,
-            title: !errors && message
+            fullName: !errors && message
           }
         }));
       }
@@ -119,14 +143,20 @@ function EditProfile({ user: userToEdit = {} }) {
   }
 
   const { user, errors, touch } = state;
-  console.log(user)
   return (
     <div className="row row-cols-1 mt-4">
       <div className="col text-center mb-4">
-        <img className="img-fluid w-25" src={user.avatar} alt={user.username} onError={(event) => event.target.src = 'https://via.placeholder.com/800x400'} />
+        <img className="img-fluid w-25" src={user.avatar} alt={user.username} onError={(event) => event.target.src = 'https://via.placeholder.com/100x100'} />
       </div>
       <div className="col">
         <form onSubmit={handleSubmit}>
+
+          <div className="input-group mb-2">
+            <span className="input-group-text"><i className="fa fa-picture-o fa-fw"></i></span>
+            <input type="file" name="avatar" className={`form-control ${(touch.avatar && errors.avatar) ? 'is-invalid' : ''}`} placeholder="User avatar..."
+              onBlur={handleBlur} onChange={handleChange} />
+            <div className="invalid-feedback">{errors.avatar}</div>
+          </div>
 
           <div className="form-floating mb-3">
             <input type="text" name="fullName" id="fullName" className={`form-control ${touch.fullName && errors.fullName ? 'is-invalid' : ''}`}
@@ -143,7 +173,7 @@ function EditProfile({ user: userToEdit = {} }) {
           </div>
 
           <div class="form-floating mb-3">
-            <textarea name="bio" id="bio" className={`form-control ${touch.website && errors.website ? 'is-invalid' : ''}`} onChange={handleChange} onBlur={handleBlur} value={user.bio} placeholder="Bio..." id="bio" style={{ height: 100 }}></textarea>
+            <textarea name="bio" id="bio" className={`form-control ${touch.bio && errors.bio ? 'is-invalid' : ''}`} onChange={handleChange} onBlur={handleBlur} value={user.bio} placeholder="Bio..." id="bio" style={{ height: 100 }}></textarea>
             <label for="bio">Bio</label>
             <div className="invalid-feedback">{errors.bio}</div>
           </div>
@@ -157,7 +187,7 @@ function EditProfile({ user: userToEdit = {} }) {
 
           <div className="d-grid">
             <button type="submit" className="btn btn-primary">
-              <span>Update User</span>
+              <span>Save changes</span>
             </button>
           </div>
         </form>
