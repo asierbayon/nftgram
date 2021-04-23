@@ -23,7 +23,7 @@ module.exports.create = (req, res, next) => {
 module.exports.get = async (req, res, next) => {
   const { username } = req.params;
   try {
-    const user = await User.findOne({ username }, 'username fullName id avatar bio website')
+    const user = await User.findOne({ username }, 'username fullName id avatar bio website ethAddress')
       .populate('followingCount')
       .populate('followersCount')
     if (!user) return next(createError(404, 'User not found'));
