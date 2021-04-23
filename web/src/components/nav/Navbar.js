@@ -29,7 +29,7 @@ function Navbar() {
                   </a>
                   <ul className="dropdown-menu dropdown-menu-left" style={{ position: 'absolute' }}>
                     <li><Link className="dropdown-item" to={`/${currentUser.username}`}>Profile</Link></li>
-                    <li><Link className="dropdown-item" to="/settings">Settings</Link></li>
+                    <li><Link className="dropdown-item" to={`/${currentUser.username}/edit`}>Settings</Link></li>
                     <li onClick={handleLogout}><i className="comment fas fa-power-off me-2"></i> Logout</li>
                   </ul>
                 </li>
