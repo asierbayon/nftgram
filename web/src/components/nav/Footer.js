@@ -1,16 +1,26 @@
-import React from 'react'
+import { useContext } from 'react'
+import { AuthContext } from '../../contexts/AuthStore';
 import { Link } from 'react-router-dom';
 
 function Footer() {
+  const { currentUser } = useContext(AuthContext);
+
+  if (!currentUser) return null;
+
   return (
-    <footer className="footer row m-0 bg-light" style={{ position: 'fixed', left: 0, bottom: 0, width: '100vw' }}>
-      <Link to="/" className="col border d-flex justify-content-center align-items-center py-2">
-        <i class="fas fa-home text-dark"></i>
-      </Link>
-      <Link to="/" className="col border d-flex justify-content-center align-items-center py-2">
-      <i class="far fa-plus-square text-dark"></i>
-      </Link>
-    </footer>
+    <div className="d-flex justify-content-center">
+      <footer className="row glass rounded-pill" style={{ position: 'fixed', bottom: 20, width: '50vw', boxShadow: '2px -10px 50px 3px rgba(0,0,0,0.13)' }}>
+        <Link to="/" className="col d-flex justify-content-center align-items-center py-3">
+          <i class="fas fa-home text-dark fs-5"></i>
+        </Link>
+        <Link to="/" className="col d-flex justify-content-center align-items-center py-3">
+          <i class="far fa-plus-square text-dark fs-5"></i>
+        </Link>
+        <Link to={`/${currentUser.username}`} className="col d-flex justify-content-center align-items-center py-3">
+          <i class="fas fa-user-circle text-dark fs-5"></i>
+        </Link>
+      </footer>
+    </div>
   )
 }
 

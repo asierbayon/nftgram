@@ -149,8 +149,8 @@ function EditProfile({ user: userToEdit = {} }) {
         <form onSubmit={handleSubmit}>
 
           <div style={{ position: 'relative' }} className="col text-center mb-4">
-            <img className="img-fluid rounded-circle w-25" src={user.avatar} alt={user.username} onError={(event) => event.target.src = 'https://via.placeholder.com/100x100'} />
-            <i onClick={() => inputRef.current.click()} style={{ position: 'absolute', bottom: 0, right: 0, left: 80 }} class="fas fa-plus-circle fs-3"></i>
+            <img className="img-fluid rounded-circle w-25 border border-primary border-5" src={user.avatar} alt={user.username} onError={(event) => event.target.src = 'https://via.placeholder.com/100x100'} />
+            <i onClick={() => inputRef.current.click()} style={{ position: 'absolute', bottom: 0, right: 0, left: 80 }} class="fas fa-plus-circle fs-3 text-primary"></i>
           </div>
 
           <div className="input-group mb-2 d-none">
@@ -188,8 +188,8 @@ function EditProfile({ user: userToEdit = {} }) {
           </div>
 
           <div className="d-grid">
-            <button type="submit" className="btn btn-primary">
-              <span>Save changes</span>
+            <button type="submit" className="btn btn-primary fw-bold">
+              Save changes
             </button>
           </div>
         </form>

@@ -55,13 +55,11 @@ function SearchBar() {
 
   return (
     <div>
-      <div className="row">
-        <div>
+      <div>
           <ClickAwayListener onClickAway={handleClickAway}>
             <input onClick={handleClick} placeholder="Search users..." type="text" className="form-control"
-              id="search" autoComplete="off" onChange={handleSearch} />
+              id="search" autoComplete="off" onChange={handleSearch} style={{ height: 25, fontSize: 12 }} />
           </ClickAwayListener>
-        </div>
       </div>
       {displayUsers && open
         ? <div className="border rounded px-3 py-1" style={{ position: 'absolute', zIndex: 999, backgroundColor: 'white' }}>

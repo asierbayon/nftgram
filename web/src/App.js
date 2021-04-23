@@ -15,7 +15,7 @@ function App() {
     <Router>
       <AuthStore>
         <Navbar />
-        <div className="px-3 mb-5">
+        <div className="px-3 my-5 py-3">
           <Switch>
             <Route exact path="/" component={Feed} />
             <Route exact path="/register" component={Register} />
