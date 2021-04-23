@@ -52,7 +52,7 @@ const userSchema = new Schema({
   website: {
     type: String,
     validate: (value) => {
-      if (!validator.isURL(value, { require_protocol: true })) {
+      if (value && !validator.isURL(value, { require_protocol: true })) {
         throw new Error('Invalid URL.');
       }
     },
@@ -61,7 +61,7 @@ const userSchema = new Schema({
   ethAddress: {
     type: String,
     validate: (value) => {
-      if (!validator.isEthereumAddress(value)) {
+      if (value && !validator.isEthereumAddress(value)) {
         throw new Error('Invalid Ethereum address.');
       }
     },
