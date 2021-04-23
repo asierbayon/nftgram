@@ -1,8 +1,7 @@
-import { useState, useContext } from 'react';
+import { useState, useRef } from 'react';
 import { useHistory } from 'react-router';
 import usersService from '../../services/users-service';
 import validator from 'validator';
-import axios from 'axios';
 
 const validations = {
   avatar: (value) => {
@@ -44,6 +43,7 @@ const validations = {
 
 function EditProfile({ user: userToEdit = {} }) {
 
+  const inputRef = useRef(null)
   const history = useHistory();
   const [state, setstate] = useState({
     user: {
@@ -74,11 +74,11 @@ function EditProfile({ user: userToEdit = {} }) {
       usersService.update(formData)
         .then(response => {
           setstate(state => ({
-              ...state,
-              user: {
-                ...state.user,
-                avatar: response.avatar
-              }
+            ...state,
+            user: {
+              ...state.user,
+              avatar: response.avatar
+            }
           }))
         })
         .catch(error => console.log(error))
@@ -145,15 +145,17 @@ function EditProfile({ user: userToEdit = {} }) {
   const { user, errors, touch } = state;
   return (
     <div className="row row-cols-1 mt-4">
-      <div className="col text-center mb-4">
-        <img className="img-fluid w-25" src={user.avatar} alt={user.username} onError={(event) => event.target.src = 'https://via.placeholder.com/100x100'} />
-      </div>
       <div className="col">
         <form onSubmit={handleSubmit}>
 
-          <div className="input-group mb-2">
+          <div style={{ position: 'relative' }} className="col text-center mb-4">
+            <img className="img-fluid rounded-circle w-25" src={user.avatar} alt={user.username} onError={(event) => event.target.src = 'https://via.placeholder.com/100x100'} />
+            <i onClick={() => inputRef.current.click()} style={{ position: 'absolute', bottom: 0, right: 0, left: 80 }} class="fas fa-plus-circle fs-3"></i>
+          </div>
+
+          <div className="input-group mb-2 d-none">
             <span className="input-group-text"><i className="fa fa-picture-o fa-fw"></i></span>
-            <input type="file" name="avatar" className={`form-control ${(touch.avatar && errors.avatar) ? 'is-invalid' : ''}`} placeholder="User avatar..."
+            <input type="file" ref={inputRef} name="avatar" className={`form-control ${(touch.avatar && errors.avatar) ? 'is-invalid' : ''}`} placeholder="User avatar..."
               onBlur={handleBlur} onChange={handleChange} />
             <div className="invalid-feedback">{errors.avatar}</div>
           </div>
