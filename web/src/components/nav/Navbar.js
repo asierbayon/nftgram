@@ -9,7 +9,7 @@ function Navbar() {
         <ul className="navbar-nav">
           <Link to="/">
             <h5 className="ms-2 text-dark" style={{ fontWeight: 900 }}>
-              <i class="fas fa-camera-retro me-2"></i>
+              <i className="fas fa-camera-retro me-2"></i>
               Nft<span className="text-primary">gram</span>
             </h5>
           </Link>

@@ -10,12 +10,12 @@ function ShareButton({ id, className }) {
   }
 
   return (
-    <div class={`btn-group ${className}`}>
-      <button type="button" class="btn" data-bs-toggle="dropdown" aria-expanded="false">
-        <i class="fas fa-ellipsis-h"></i>
+    <div className={`btn-group ${className}`}>
+      <button type="button" className="btn" data-bs-toggle="dropdown" aria-expanded="false">
+        <i className="fas fa-ellipsis-h"></i>
       </button>
-      <ul class="dropdown-menu dropdown-menu-end">
-        <li><button onClick={copyLinkToClipboard} class="dropdown-item" type="button">Copy URL</button></li>
+      <ul className="dropdown-menu dropdown-menu-end">
+        <li><button onClick={copyLinkToClipboard} className="dropdown-item" type="button">Copy URL</button></li>
       </ul>
     </div>
   )

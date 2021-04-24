@@ -9,6 +9,7 @@ import SingleAsset from './screens/SingleAsset';
 import Navbar from './components/nav/Navbar';
 import EditProfile from './screens/EditProfile';
 import Footer from './components/nav/Footer';
+import UploadAsset from './screens/UploadAsset';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route exact path="/register" component={Register} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/:username" component={User} />
+            <Route exact path="/assets/upload" component={UploadAsset} />
             <Route exact path="/assets/:id" component={SingleAsset} />
             <Route exact path="/:username/edit" component={EditProfile} />
           </Switch>

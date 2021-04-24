@@ -150,7 +150,7 @@ function EditProfile({ user: userToEdit = {} }) {
 
           <div style={{ position: 'relative' }} className="col text-center mb-4">
             <img className="img-fluid rounded-circle w-25 border border-primary border-5" src={user.avatar} alt={user.username} onError={(event) => event.target.src = 'https://via.placeholder.com/100x100'} />
-            <i onClick={() => inputRef.current.click()} style={{ position: 'absolute', bottom: 0, right: 0, left: 80 }} class="fas fa-plus-circle fs-3 text-primary"></i>
+            <i onClick={() => inputRef.current.click()} style={{ position: 'absolute', bottom: 0, right: 0, left: 80 }} className="fas fa-plus-circle fs-3 text-primary"></i>
           </div>
 
           <div className="input-group mb-2 d-none">
@@ -174,7 +174,7 @@ function EditProfile({ user: userToEdit = {} }) {
             <div className="invalid-feedback">{errors.website}</div>
           </div>
 
-          <div class="form-floating mb-3">
+          <div className="form-floating mb-3">
             <textarea name="bio" id="bio" className={`form-control ${touch.bio && errors.bio ? 'is-invalid' : ''}`} onChange={handleChange} onBlur={handleBlur} value={user.bio} placeholder="Bio..." id="bio" style={{ height: 100 }}></textarea>
             <label for="bio">Bio</label>
             <div className="invalid-feedback">{errors.bio}</div>
