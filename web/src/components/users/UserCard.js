@@ -11,7 +11,7 @@ function UserCard({ user, amIFollowing, className, handleShowFollows, handleFoll
           <img src={user.avatar} alt={user.username} className="rounded-circle border border-primary border-4" style={{ height: 55 }} />
         </div>
         <div className="col d-flex flex-column justify-content-center ms-3">
-          <p className="text-muted fw-bold">{user.fullName}</p>
+          <p className="text-muted fw-bold text-overflow">{user.fullName}</p>
           <h6 className="fw-bold">{user.username}</h6>
         </div>
       </div>
