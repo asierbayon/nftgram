@@ -20,9 +20,8 @@ function Follows({ handleShowFollows, handleFollow, usersToDisplay }) {
       const { username } = params;
 
       let users;
-      if (usersToDisplay === 'following') users = await userService.following(username)
+      if (usersToDisplay === 'Following') users = await userService.following(username)
       else users = await userService.followers(username)
-      console.log('users', users)
       if (!isUnmounted) {
         setstate({
           users,
@@ -42,13 +41,18 @@ function Follows({ handleShowFollows, handleFollow, usersToDisplay }) {
   const { users } = state;
 
   return (
-    <div className="d-flex justify-content-center">
-      <div style={{ width: 400 }}>
-        <i className="fas fa-times" onClick={handleShowFollows}></i>
-        {users.map(user => (
-          <UserCard key={user.id} user={user.user || user.following} handleFollow={handleFollow}
-            amIFollowing={user.amIFollowing} handleShowFollows={handleShowFollows} className="mb-2" />
-        ))}
+    <div className="mt-4">
+      <div className="position-relative">
+        <h4 className="fw-bold text-center">{usersToDisplay}</h4>
+        <i className="fas fa-arrow-left position-absolute top-50 start-0 translate-middle ms-3" onClick={handleShowFollows}></i>
+      </div>
+      <div className="d-flex justify-content-center">
+        <div className="mt-4">
+          {users.map(user => (
+            <UserCard key={user.id} user={user.user || user.following} handleFollow={handleFollow}
+              amIFollowing={user.amIFollowing} handleShowFollows={handleShowFollows} className="mb-2" />
+          ))}
+        </div>
       </div>
     </div>
   )

@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 
 function UserChip({ user, className }) {
-  console.log(user)
   return (
     <div className={`${className}`}>
       <Link to={`/${user.username}`} style={{ textDecoration: 'none', color: 'black' }}>

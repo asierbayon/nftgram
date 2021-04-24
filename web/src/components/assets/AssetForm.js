@@ -81,7 +81,6 @@ function AssetForm() {
     if (isValid()) {
       try {
         const asset = await axios.get(`https://api.opensea.io/api/v1/asset/${state.data.contractAddress}/${state.data.tokenId}/`);
-        console.log(asset)
         const newAsset = {
           title: asset.data.name,
           image: asset.data.image_url,
@@ -92,7 +91,6 @@ function AssetForm() {
         }
         assetsService.upload(newAsset);
         history.push('/');
-        
       } catch (error) {
         const { message, errors } = error.response ? error.response.data : error;
         console.error(message);
@@ -126,7 +124,7 @@ function AssetForm() {
       </div>
 
       <div className="d-grid">
-        <button className="btn btn-primary p-2 fw-bold" type="submit">Upload asset</button>
+        <button className="btn btn-primary p-2 fw-bold" type="submit" style={{ boxShadow: '0px 10px 20px -2px rgba(10,88,202,0.5)' }}>Upload asset</button>
       </div>
 
     </form>

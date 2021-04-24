@@ -33,6 +33,7 @@ function Profile() {
       }));
       const { username } = params;
       const user = await usersService.user(username);
+      user.assets = user.assets.reverse();
       if (!isUnmounted) {
         setstate(state => ({
           ...state,
@@ -105,11 +106,11 @@ function Profile() {
                 <h5 className="fw-bold">{assets.length}</h5>
                 <small className="text-muted">{assets.length !== 1 ? 'posts' : 'post'}</small>
               </div>
-              <div onClick={() => handleShowFollows('followers')} className="col text-center text-dark cursor-pointer border-end">
+              <div onClick={() => handleShowFollows('Followers')} className="col text-center text-dark cursor-pointer border-end">
                 <h5 className="fw-bold">{user.followersCount}</h5>
                 <small className="text-muted">{user.followersCount !== 1 ? 'followers' : 'follower'}</small>
               </div>
-              <div onClick={() => handleShowFollows('following')} className="col text-center text-dark cursor-pointer">
+              <div onClick={() => handleShowFollows('Following')} className="col text-center text-dark cursor-pointer">
                 <h5 className="fw-bold">{user.followingCount}</h5>
                 <small className="text-muted">following</small>
               </div>
