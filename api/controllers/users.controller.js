@@ -8,10 +8,16 @@ const Like = require('../models/like.model');
 
 
 module.exports.create = (req, res, next) => {
-  User.findOne({ email: req.body.email })
+  User.findOne({
+    $or: [{ email: req.body.email }, { username: req.body.username }]
+  })
     .then(user => {
       if (user) {
-        return next(createError(400, { errors: { email: 'This email already exists' } }))
+        if (req.body.email === user.email) {
+          return next(createError(400, { errors: { email: 'This email already exists' } }))
+        } else {
+          return next(createError(400, { errors: { username: 'This username already exists' } }))
+        }
       } else {
         return User.create(req.body)
           .then(user => res.status(201).json(user))
@@ -56,7 +62,6 @@ module.exports.profile = async (req, res, next) => {
   if (!user) return next(createError(404, 'User not found'))
 
   const assets = await Asset.find({ owner: user.id }, 'image')
-
 
   return res.status(200).json({
     user,
