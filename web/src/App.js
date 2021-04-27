@@ -10,6 +10,7 @@ import Navbar from './components/nav/Navbar';
 import EditProfile from './screens/EditProfile';
 import Footer from './components/nav/Footer';
 import UploadAsset from './screens/UploadAsset';
+import Error from './screens/Error';
 
 function App() {
   return (
@@ -25,6 +26,11 @@ function App() {
             <Route exact path="/assets/upload" component={UploadAsset} />
             <Route exact path="/assets/:id" component={SingleAsset} />
             <Route exact path="/:username/edit" component={EditProfile} />
+
+            {/* <Route exact path="/404" component={() => <Error code={404} />} />
+            <Route exact path="/403" component={() => <Error code={403} />} /> */}
+
+            <Redirect to="/" />
           </Switch>
         </div>
         <Footer />

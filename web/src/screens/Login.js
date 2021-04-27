@@ -6,7 +6,7 @@ function Login() {
     <div className="row" style={{ marginTop: '100px' }}>
       <div className="col-12 col-sm-4 mx-auto">
         <div className="py-2">
-          <h3>Sign in</h3>
+          <h3 className="fw-bold">Sign in</h3>
           <p>Enter your details below.</p>
         </div>
         <LoginForm />

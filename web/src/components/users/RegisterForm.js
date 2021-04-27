@@ -1,152 +1,134 @@
+import * as Yup from 'yup';
 import { useState } from 'react';
-import { useHistory } from 'react-router';
+import { Icon } from '@iconify/react';
+import { useFormik, Form, FormikProvider } from 'formik';
+import eyeFill from '@iconify-icons/eva/eye-fill';
+import eyeOffFill from '@iconify-icons/eva/eye-off-fill';
+// material
+import { Box, TextField, IconButton, InputAdornment } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+// hooks
+import useIsMountedRef from '../../hooks/useIsMountedRef';
+// services
 import { register } from '../../services/users-service';
 
-const EMAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-const PASSWORD_PATTERN = /^.{8,}$/;
+// -------------------------------------------------------------------------
 
-const validations = {
-  fullName: (value) => {
-    let message;
-    if (!value) {
-      message = 'Your full name is required';
-    }
-    return message;
-  },
-  username: (value) => {
-    let message;
-    if (!value) {
-      message = 'A username is required';
-    }
-    return message;
-  },
-  email: (value) => {
-    let message;
-    if (!value) {
-      message = 'A valid email is required';
-    } else if (!EMAIL_PATTERN.test(value)) {
-      message = 'the email is invalid';
-    }
-    return message;
-  },
-  password: (value) => {
-    let message;
-    if (!value) {
-      message = 'A valid password is required';
-    } else if (!PASSWORD_PATTERN.test(value)) {
-      message = 'the password is invalid';
-    }
-    return message;
-  }
-}
+export default function RegisterForm() {
+  const isMountedRef = useIsMountedRef();
+  const [showPassword, setShowPassword] = useState(false);
 
-function RegisterForm() {
-
-  const history = useHistory();
-  const [state, setState] = useState({
-    user: {
-      fullName: '',
-      username: '',
-      email: '',
-      password: ''
-    },
-    errors: {
-      fullName: validations.fullName(),
-      username: validations.username(),
-      email: validations.email(),
-      password: validations.password()
-    },
-    touch: {}
+  const RegisterSchema = Yup.object().shape({
+    fullName: Yup.string()
+      .max(50, 'Your name is too long')
+      .required('Full name is required'),
+    username: Yup.string()
+      .min(3, 'Your username is too short')
+      .max(35, 'Your username is too long')
+      .required('Username is required'),
+    email: Yup.string()
+      .email('Invalid email address')
+      .required('Email is required'),
+    password: Yup.string().required('Password is required')
   });
 
-  const isValid = () => {
-    const { errors } = state;
-    return !Object.keys(errors).some(error => errors[error]);
-  }
-
-  const handleBlur = (event) => {
-    const { name } = event.target;
-    setState(state => ({
-      ...state,
-      touch: {
-        ...state.touch,
-        [name]: true
-      }
-    }));
-  }
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setState(state => ({
-      ...state,
-      user: {
-        ...state.user,
-        [name]: value
-      },
-      errors: {
-        ...state.errors,
-        [name]: validations[name] && validations[name](value)
-      }
-    }));
-  }
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (isValid()) {
+  const formik = useFormik({
+    initialValues: {
+      fullName: '',
+      email: '',
+      username: '',
+      password: ''
+    },
+    validationSchema: RegisterSchema,
+    onSubmit: async (values, { setErrors, setSubmitting }) => {
       try {
-        const { user } = state;
-        await register(user);
-        history.push('/login', { email: user.email });
+        await register({
+          fullName: values.fullName,
+          email: values.email,
+          username: values.username,
+          password: values.password
+        });
+        if (isMountedRef.current) {
+          setSubmitting(false);
+        }
       } catch (error) {
-        const { message, errors } = error.response ? error.response.data : error;
-        console.error(message, error);
-        setState(state => ({
-          ...state,
-          errors
-        }))
+        if (isMountedRef.current) {
+          setErrors(error.response.data.errors);
+          setSubmitting(false);
+        }
       }
     }
-  }
+  });
 
-  const { user, errors, touch } = state;
+  const { errors, touched, handleSubmit, getFieldProps } = formik;
 
   return (
-    <form className="mt-3 mb-3" onSubmit={handleSubmit}>
+    <FormikProvider value={formik}>
+      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+        <TextField
+          fullWidth
+          label="Full name"
+          {...getFieldProps('fullName')}
+          error={Boolean(touched.fullName && errors.fullName)}
+          helperText={touched.fullName && errors.fullName}
+        />
 
-      <div className="form-floating mb-3">
-        <input type="text" name="fullName" id="fullName" className={`form-control ${touch.fullName && errors.fullName ? 'is-invalid' : ''}`}
-          placeholder="Full name" onBlur={handleBlur} onChange={handleChange} value={user.name} />
-        <label htmlFor="fullName">Full name</label>
-        <div className="invalid-feedback">{errors.fullName}</div>
-      </div>
+        <TextField
+          fullWidth
+          autoComplete="username"
+          name="username"
+          type="text"
+          label="Username"
+          {...getFieldProps('username')}
+          error={Boolean(touched.username && errors.username)}
+          helperText={touched.username && errors.username}
+          sx={{ my: 3 }}
+        />
 
-      <div className="form-floating mb-3">
-        <input type="text" name="username" id="username" className={`form-control ${touch.username && errors.username ? 'is-invalid' : ''}`}
-          placeholder="Username" onBlur={handleBlur} onChange={handleChange} value={user.name} />
-        <label htmlFor="username">Username</label>
-        <div className="invalid-feedback">{errors.username}</div>
-      </div>
+        <TextField
+          fullWidth
+          autoComplete="email"
+          name="email"
+          type="email"
+          label="Email address"
+          {...getFieldProps('email')}
+          error={Boolean(touched.email && errors.email)}
+          helperText={touched.email && errors.email}
+          sx={{ mb: 3 }}
+        />
 
-      <div className="form-floating mb-3">
-        <input type="email" id="email" placeholder="name@example.com"
-          name="email" className={`form-control ${touch.email && errors.email ? 'is-invalid' : ''}`}
-          onBlur={handleBlur} onChange={handleChange} value={user.email} />
-        <label htmlFor="email">Email address</label>
-        <div className="invalid-feedback">{errors.email}</div>
-      </div>
-
-      <div className="form-floating mb-3">
-        <input type="password" id="password" name="password"
-          className={`form-control ${touch.password && errors.password ? 'is-invalid' : ''}`}
-          placeholder="Password" onBlur={handleBlur} onChange={handleChange} value={user.password} />
-        <label htmlFor="password">Password</label>
-        <div className="invalid-feedback">{errors.password}</div>
-      </div>
-
-      <button className="btn btn-primary w-100 p-2" type="submit" disabled={!isValid()}>Register</button>
-
-    </form>
-  );
+        <TextField
+          fullWidth
+          autoComplete="current-password"
+          type={showPassword ? 'text' : 'password'}
+          label="Password"
+          {...getFieldProps('password')}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment>
+                <IconButton
+                  edge="end"
+                  onClick={() => setShowPassword((prev) => !prev)}
+                >
+                  <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
+          error={Boolean(touched.password && errors.password)}
+          helperText={touched.password && errors.password}
+        />
+        <Box sx={{ mt: 3 }}>
+          <Button
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+          >
+            Register
+        </Button>
+        </Box>
+      </Form>
+    </FormikProvider>
+  )
 }
-
-export default RegisterForm;
