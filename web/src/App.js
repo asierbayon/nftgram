@@ -16,23 +16,21 @@ function App() {
   return (
     <Router>
       <AuthStore>
-        <Navbar />
-        <div className="px-3 my-5 py-3">
-          <Switch>
-            <Route exact path="/" component={Feed} />
-            <Route exact path="/register" component={Register} />
-            <Route exact path="/login" component={Login} />
-            <Route exact path="/:username" component={User} />
-            <Route exact path="/assets/upload" component={UploadAsset} />
-            <Route exact path="/assets/:id" component={SingleAsset} />
-            <Route exact path="/:username/edit" component={EditProfile} />
+        {/* <Navbar /> */}
+        <Switch>
+          <Route exact path="/" component={Feed} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/:username" component={User} />
+          <Route exact path="/assets/upload" component={UploadAsset} />
+          <Route exact path="/assets/:id" component={SingleAsset} />
+          <Route exact path="/:username/edit" component={EditProfile} />
 
-            {/* <Route exact path="/404" component={() => <Error code={404} />} />
+          {/* <Route exact path="/404" component={() => <Error code={404} />} />
             <Route exact path="/403" component={() => <Error code={403} />} /> */}
 
-            <Redirect to="/" />
-          </Switch>
-        </div>
+          <Redirect to="/" />
+        </Switch>
         <Footer />
       </AuthStore>
     </Router>
