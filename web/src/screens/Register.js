@@ -10,6 +10,7 @@ import {
   Typography
 } from '@material-ui/core';
 import RegisterForm from '../components/users/RegisterForm';
+import CameraIcon from '@material-ui/icons/Camera';
 
 // ----------------------------------------------------------------------
 
@@ -19,20 +20,24 @@ const RootStyle = styled('box')(({ theme }) => ({
   }
 }));
 
+const LogoContainerStyle = styled('header')(({ theme }) => ({
+  top: 0,
+  zIndex: 9,
+  lineHeight: 0,
+  position: 'absolute',
+  padding: theme.spacing(2),
+  [theme.breakpoints.up('md')]: {
+    padding: theme.spacing(5, 0, 0, 7)
+  }
+}));
+
 const HeaderStyle = styled('header')(({ theme }) => ({
   top: 0,
   right: 30,
   zIndex: 9,
   lineHeight: 0,
-  display: 'flex',
-  alignItems: 'center',
   position: 'absolute',
-  padding: theme.spacing(3),
-  justifyContent: 'space-between',
-  [theme.breakpoints.up('md')]: {
-    alignItems: 'flex-start',
-    padding: theme.spacing(5, 5, 0, 7)
-  }
+  padding: theme.spacing(5, 5, 0, 7),
 }));
 
 const SectionStyle = styled(Card)(({ theme }) => ({
@@ -76,6 +81,12 @@ export default function Register() {
           </Typography>
         </Hidden>
       </HeaderStyle>
+
+      <LogoContainerStyle>
+        <RouterLink to="/">
+          <CameraIcon sx={{ fontSize: 30 }}/>
+        </RouterLink>
+      </LogoContainerStyle>
 
       <Hidden mdDown>
         <SectionStyle>
@@ -129,6 +140,6 @@ export default function Register() {
           </Hidden>
         </ContentStyle>
       </Container>
-    </RootStyle>
+    </RootStyle >
   );
 }
