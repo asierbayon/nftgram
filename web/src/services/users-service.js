@@ -1,7 +1,7 @@
 import http from './base-api-service';
 
 export const register = (user) => http.post('/users', user);
-export const login = (email, password) => http.post('/login', { email, password });
+export const login = (user) => http.post('/login', user);
 export const logout = () => http.post('/logout');
 export const update = (user) => http.put('/users', user);
 

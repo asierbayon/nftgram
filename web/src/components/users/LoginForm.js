@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthStore';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
@@ -24,6 +25,7 @@ import useIsMountedRef from '../../hooks/useIsMountedRef';
 
 export default function LoginForm() {
   const history = useHistory();
+  const { onUserChange } = useContext(AuthContext);
   const isMountedRef = useIsMountedRef();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -43,16 +45,17 @@ export default function LoginForm() {
     validationSchema: LoginSchema,
     onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
-        await login({
+        const user = await login({
           email: values.email,
           password: values.password
         });
-        history.push('/');
         if (isMountedRef.current) {
           setSubmitting(false);
         }
+        onUserChange(user);
+        history.push('/');
       } catch (error) {
-        console.error(error.message);
+        console.error('error', error.message);
         resetForm();
         if (isMountedRef.current) {
           setSubmitting(false);
