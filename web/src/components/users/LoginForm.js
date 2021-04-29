@@ -1,126 +1,147 @@
-import { useState, useContext } from "react";
-import { useHistory, useLocation } from "react-router";
-import { login } from "../../services/users-service";
-import { AuthContext } from '../../contexts/AuthStore';
+import * as Yup from 'yup';
+import { useState } from 'react';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { useFormik, Form, FormikProvider } from 'formik';
+import { Icon } from '@iconify/react';
+import eyeFill from '@iconify-icons/eva/eye-fill';
+import eyeOffFill from '@iconify-icons/eva/eye-off-fill';
+// material
+import {
+  Box,
+  Link,
+  Checkbox,
+  TextField,
+  IconButton,
+  InputAdornment,
+  FormControlLabel
+} from '@material-ui/core';
+import { Button } from '@material-ui/core';
+// services
+import { login } from '../../services/users-service';
+import useIsMountedRef from '../../hooks/useIsMountedRef';
 
-const EMAIL_PATTERN = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+// ----------------------------------------------------------------------
 
-const validations = {
-  email: (value) => {
-    let message;
-    if (!value) {
-      message = 'A valid email is required';
-    } else if (!EMAIL_PATTERN.test(value)) {
-      message = 'the email is invalid';
-    }
-    return message;
-  },
-  password: (value) => {
-    let message;
-    if (!value) {
-      message = 'Password is required';
-    }
-    return message;
-  }
-}
-
-
-function LoginForm() {
-  const { onUserChange } = useContext(AuthContext);
-  const location = useLocation();
+export default function LoginForm() {
   const history = useHistory();
+  const isMountedRef = useIsMountedRef();
+  const [showPassword, setShowPassword] = useState(false);
 
+  const LoginSchema = Yup.object().shape({
+    email: Yup.string()
+      .email('Email must be a valid email address')
+      .required('Email is required'),
+    password: Yup.string().required('Password is required')
+  });
 
-  const [state, setState] = useState({
-    user: {
-      email: location.state?.email || '',
-      password: ''
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+      password: '',
+      remember: true
     },
-    errors: {
-      email: validations.email(),
-      password: validations.password()
-    },
-    touch: {}
-  })
-
-  const handleChange = (event) => {
-    const { name, value } = event.target;
-    setState(state => ({
-      ...state,
-      user: {
-        ...state.user,
-        [name]: value
-      },
-      errors: {
-        ...state.errors,
-        [name]: validations[name] && validations[name](value)
-      }
-    }));
-  }
-
-  const isValid = () => {
-    const { errors } = state;
-    return !Object.keys(errors).some(error => errors[error]);
-  }
-
-  const handleBlur = (event) => {
-    const { name } = event.target;
-    setState(state => ({
-      ...state,
-      touch: {
-        ...state.touch,
-        [name]: true
-      }
-    }));
-  }
-
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (isValid()) {
+    validationSchema: LoginSchema,
+    onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
       try {
-        const user = await login(state.user.email, state.user.password);
-        onUserChange(user);
+        await login({
+          email: values.email,
+          password: values.password
+        });
         history.push('/');
+        if (isMountedRef.current) {
+          setSubmitting(false);
+        }
       } catch (error) {
-        const { message, errors } = error.response ? error.response.data : error;
-        console.error(message);
-        setState(state => ({
-          ...state,
-          errors: errors
-        }))
+        console.error(error.message);
+        resetForm();
+        if (isMountedRef.current) {
+          setSubmitting(false);
+          setErrors({ afterSubmit: error.code || error.message });
+        }
       }
     }
-  }
+  });
 
-  const { user, errors, touch } = state;
+  const {
+    errors,
+    touched,
+    values,
+    handleSubmit,
+    getFieldProps
+  } = formik;
+
+  const handleShowPassword = () => {
+    setShowPassword((show) => !show);
+  };
 
   return (
-    <form className="mt-3 mb-3" onSubmit={handleSubmit}>
+    <FormikProvider value={formik}>
+      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+        <TextField
+          fullWidth
+          autoComplete="email"
+          type="email"
+          label="Email address"
+          {...getFieldProps('email')}
+          error={Boolean(touched.email && errors.email)}
+          helperText={touched.email && errors.email}
+          sx={{ mb: 3 }}
+        />
 
-      <div className="form-floating mb-3">
-        <input type="email" id="email" placeholder="name@example.com"
-          name="email" className={`form-control ${touch.email && errors.email ? 'is-invalid' : ''}`}
-          onChange={handleChange} onBlur={handleBlur} value={user.email} />
-        <label htmlFor="email">Email address</label>
-        <div className="invalid-feedback">{errors.email}</div>
-      </div>
+        <TextField
+          fullWidth
+          autoComplete="current-password"
+          type={showPassword ? 'text' : 'password'}
+          label="Password"
+          {...getFieldProps('password')}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment>
+                <IconButton onClick={handleShowPassword} edge="end">
+                  <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+                </IconButton>
+              </InputAdornment>
+            )
+          }}
+          error={Boolean(touched.password && errors.password)}
+          helperText={touched.password && errors.password}
+        />
+        <Box
+          sx={{
+            my: 2,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          <FormControlLabel
+            control={
+              <Checkbox
+                {...getFieldProps('remember')}
+                checked={values.remember}
+              />
+            }
+            label="Remember me"
+          />
 
-      <div className="form-floating mb-3">
-        <input type="password" id="password" name="password"
-          className={`form-control ${touch.password && errors.password ? 'is-invalid' : ''}`}
-          placeholder="Password" onChange={handleChange} onBlur={handleBlur} value={user.password} />
-        <label htmlFor="password">Password</label>
-        <div className="invalid-feedback">{errors.password}</div>
-      </div>
+          <Link
+            component={RouterLink}
+            variant="subtitle2"
+            to="#"
+          >
+            Forgot password?
+          </Link>
+        </Box>
 
-      <div className="d-grid">
-        <button className="btn btn-primary p-2" type="submit">Login</button>
-      </div>
-
-    </form>
+        <Button
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+        >
+          Login
+        </Button>
+      </Form>
+    </FormikProvider>
   );
 }
-
-export default LoginForm;
