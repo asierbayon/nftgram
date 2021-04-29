@@ -10,34 +10,30 @@ import {
   Typography
 } from '@material-ui/core';
 import RegisterForm from '../components/users/RegisterForm';
-import CameraIcon from '@material-ui/icons/Camera';
+import Logo from '../components/Logo';
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('box')(({ theme }) => ({
+  position: 'relative',
   [theme.breakpoints.up('md')]: {
     display: 'flex'
   }
 }));
 
-const LogoContainerStyle = styled('header')(({ theme }) => ({
-  top: 0,
-  zIndex: 9,
-  lineHeight: 0,
-  position: 'absolute',
-  padding: theme.spacing(2),
-  [theme.breakpoints.up('md')]: {
-    padding: theme.spacing(5, 0, 0, 7)
-  }
-}));
-
 const HeaderStyle = styled('header')(({ theme }) => ({
   top: 0,
-  right: 30,
   zIndex: 9,
   lineHeight: 0,
+  width: '93vw',
+  alignItems: 'center',
   position: 'absolute',
-  padding: theme.spacing(5, 5, 0, 7),
+  padding: theme.spacing(3),
+  justifyContent: 'space-between',
+  [theme.breakpoints.up('md')]: {
+    alignItems: 'flex-start',
+    padding: theme.spacing(7, 5, 0, 7)
+  }
 }));
 
 const SectionStyle = styled(Card)(({ theme }) => ({
@@ -67,8 +63,17 @@ export default function Register() {
   return (
     <RootStyle>
       <HeaderStyle>
+        <RouterLink to="/">
+          <Logo />
+        </RouterLink>
         <Hidden smDown>
-          <Typography variant="body2" >
+          <Typography
+            variant="body2"
+            sx={{
+              mt: { md: -2 },
+              float: 'right'
+            }}
+          >
             Already have an account? &nbsp;
             <Link
               underline="none"
@@ -81,12 +86,6 @@ export default function Register() {
           </Typography>
         </Hidden>
       </HeaderStyle>
-
-      <LogoContainerStyle>
-        <RouterLink to="/">
-          <CameraIcon sx={{ fontSize: 30 }}/>
-        </RouterLink>
-      </LogoContainerStyle>
 
       <Hidden mdDown>
         <SectionStyle>
