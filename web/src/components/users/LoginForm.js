@@ -2,7 +2,8 @@ import * as Yup from 'yup';
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthStore';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { useFormik, Form, FormikProvider } from 'formik';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify-icons/eva/eye-fill';
 import eyeOffFill from '@iconify-icons/eva/eye-off-fill';
@@ -14,19 +15,18 @@ import {
   TextField,
   IconButton,
   InputAdornment,
-  FormControlLabel
+  FormControlLabel,
+  Alert
 } from '@material-ui/core';
 import { Button } from '@material-ui/core';
 // services
 import { login } from '../../services/users-service';
-import useIsMountedRef from '../../hooks/useIsMountedRef';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const history = useHistory();
   const { onUserChange } = useContext(AuthContext);
-  const isMountedRef = useIsMountedRef();
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
@@ -36,59 +36,48 @@ export default function LoginForm() {
     password: Yup.string().required('Password is required')
   });
 
-  const formik = useFormik({
-    initialValues: {
-      email: '',
-      password: '',
-      remember: true
-    },
-    validationSchema: LoginSchema,
-    onSubmit: async (values, { setErrors, setSubmitting, resetForm }) => {
-      try {
-        const user = await login({
-          email: values.email,
-          password: values.password
-        });
-        if (isMountedRef.current) {
-          setSubmitting(false);
-        }
-        onUserChange(user);
-        history.push('/');
-      } catch (error) {
-        console.error('error', error.message);
-        resetForm();
-        if (isMountedRef.current) {
-          setSubmitting(false);
-          setErrors({ afterSubmit: error.code || error.message });
-        }
-      }
-    }
+  const { register, handleSubmit, setError, formState: { errors } } = useForm({
+    mode: 'onBlur',
+    resolver: yupResolver(LoginSchema)
   });
-
-  const {
-    errors,
-    touched,
-    values,
-    handleSubmit,
-    getFieldProps
-  } = formik;
+  const onSubmit = async (values) => {
+    try {
+      const user = await login({
+        email: values.email,
+        password: values.password
+      });
+      onUserChange(user);
+      history.push('/');
+    } catch (error) {
+      const { errors } = error.response.data;
+      setError('onSubmit', {
+        type: 'manual',
+        message: errors.onSubmit
+      })
+    }
+  }
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
 
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+    <>
+      {
+        errors.onSubmit?.message &&
+        <Alert severity="error">{errors.onSubmit?.message}</Alert>
+      }
+
+      <form autoComplete="off" noValidate onSubmit={handleSubmit(onSubmit)}>
         <TextField
           fullWidth
           autoComplete="email"
           type="email"
           label="Email address"
-          {...getFieldProps('email')}
-          error={Boolean(touched.email && errors.email)}
-          helperText={touched.email && errors.email}
-          sx={{ mb: 3 }}
+          {...register('email')}
+          error={Boolean(errors.email?.message)}
+          helperText={errors.email?.message}
+          sx={{ my: 3 }}
         />
 
         <TextField
@@ -96,7 +85,9 @@ export default function LoginForm() {
           autoComplete="current-password"
           type={showPassword ? 'text' : 'password'}
           label="Password"
-          {...getFieldProps('password')}
+          {...register('password')}
+          error={Boolean(errors.password)}
+          helperText={errors.password?.message}
           InputProps={{
             endAdornment: (
               <InputAdornment>
@@ -106,8 +97,6 @@ export default function LoginForm() {
               </InputAdornment>
             )
           }}
-          error={Boolean(touched.password && errors.password)}
-          helperText={touched.password && errors.password}
         />
         <Box
           sx={{
@@ -119,10 +108,7 @@ export default function LoginForm() {
         >
           <FormControlLabel
             control={
-              <Checkbox
-                {...getFieldProps('remember')}
-                checked={values.remember}
-              />
+              <Checkbox />
             }
             label="Remember me"
           />
@@ -144,7 +130,7 @@ export default function LoginForm() {
         >
           Login
         </Button>
-      </Form>
-    </FormikProvider>
+      </form>
+    </>
   );
 }
