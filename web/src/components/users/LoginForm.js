@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthStore';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify-icons/eva/eye-fill';
@@ -97,8 +97,8 @@ export default function LoginForm() {
           helperText={errors.password?.message}
           InputProps={{
             endAdornment: (
-              <InputAdornment>
-                <IconButton onClick={handleShowPassword} edge="end">
+              <InputAdornment position="end" >
+                <IconButton onClick={handleShowPassword} >
                   <Icon icon={showPassword ? eyeFill : eyeOffFill} />
                 </IconButton>
               </InputAdornment>
@@ -128,7 +128,7 @@ export default function LoginForm() {
           <Link
             component={RouterLink}
             variant="subtitle2"
-            to="#"
+            to="/reset-password"
           >
             Forgot password?
           </Link>

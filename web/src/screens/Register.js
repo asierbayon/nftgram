@@ -14,8 +14,7 @@ import Logo from '../components/Logo';
 
 // ----------------------------------------------------------------------
 
-const RootStyle = styled('box')(({ theme }) => ({
-  position: 'relative',
+const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex'
   }

@@ -105,9 +105,8 @@ export default function RegisterForm() {
           {...getFieldProps('password')}
           InputProps={{
             endAdornment: (
-              <InputAdornment>
+              <InputAdornment position="end">
                 <IconButton
-                  edge="end"
                   onClick={() => setShowPassword((prev) => !prev)}
                 >
                   <Icon icon={showPassword ? eyeFill : eyeOffFill} />
