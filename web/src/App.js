@@ -1,7 +1,7 @@
 import { Route, BrowserRouter as Router, Switch, Redirect } from 'react-router-dom';
 import './App.css';
-import Login from './screens/Login';
-import Register from './screens/Register';
+import Login from './screens/authentication/Login';
+import Register from './screens/authentication/Register';
 import AuthStore from './contexts/AuthStore';
 import Feed from './screens/Feed';
 import User from './screens/User';

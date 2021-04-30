@@ -9,9 +9,8 @@ import {
   Container,
   Typography
 } from '@material-ui/core';
-// components
-import LoginForm from '../components/users/LoginForm';
-import Logo from '../components/Logo';
+import RegisterForm from '../../components/authentication/RegisterForm';
+import Logo from '../../components/Logo';
 
 // ----------------------------------------------------------------------
 
@@ -56,11 +55,14 @@ const ContentStyle = styled('div')(({ theme }) => ({
   minHeight: '100vh',
   flexDirection: 'column',
   justifyContent: 'center',
+  [theme.breakpoints.down('md')]: {
+    padding: theme.spacing(5, 0, 0, 0)
+  }
 }));
 
 // ----------------------------------------------------------------------
 
-export default function Login() {
+export default function Register() {
 
   return (
     <RootStyle>
@@ -76,14 +78,14 @@ export default function Login() {
               float: 'right'
             }}
           >
-            Don’t have an account? &nbsp;
+            Already have an account? &nbsp;
             <Link
               underline="none"
               variant="subtitle2"
               component={RouterLink}
-              to="/register"
+              to="/login"
             >
-              Register
+              Login
             </Link>
           </Typography>
         </Hidden>
@@ -91,46 +93,56 @@ export default function Login() {
 
       <Hidden mdDown>
         <SectionStyle>
-          <Typography variant="h3" sx={{ px: 5, mt: 15, mb: 15 }}>
-            Hi, Welcome Back
+          <Typography variant="h3" sx={{ px: 5, mt: 5, mb: 15 }}>
+            Curate and discover NFTs with Nftgram
           </Typography>
           <img
-            src="/static/illustrations/happy.svg"
-            alt="login"
+            alt="register"
+            src="/static/illustrations/post.svg"
             style={{ padding: '0 50px' }}
           />
         </SectionStyle>
       </Hidden>
 
-      <Container maxWidth="sm">
+      <Container>
         <ContentStyle>
           <Box sx={{ mb: 5 }}>
-            <Box sx={{ flexGrow: 1 }}>
-              <Typography variant="h4" gutterBottom>
-                Sign in to Nftgram
-              </Typography>
-              <Typography sx={{ color: 'text.secondary' }}>
-                Enter your details below.
-              </Typography>
-            </Box>
+            <Typography variant="h4" gutterBottom>
+              Create an account
+            </Typography>
+            <Typography sx={{ color: 'text.secondary' }}>
+              Curate and discover NFTs.
+            </Typography>
           </Box>
 
-          <LoginForm />
+          <RegisterForm />
+
+          <Typography
+            variant="body2"
+            align="center"
+            sx={{ color: 'text.secondary', mt: 3 }}
+          >
+            By registering, I agree to Nftgram&nbsp;
+            <Link underline="always" sx={{ color: 'text.primary' }}>
+              Terms of Service
+            </Link>
+            &nbsp;and&nbsp;
+            <Link underline="always" sx={{ color: 'text.primary' }}>
+              Privacy Policy
+            </Link>
+            .
+          </Typography>
 
           <Hidden smUp>
-            <Typography variant="body2" align="center" sx={{ mt: 3 }}>
-              Don’t have an account?&nbsp;
-              <Link
-                variant="subtitle2"
-                component={RouterLink}
-                to="/register"
-              >
-                Get started
+            <Typography variant="subtitle2" sx={{ mt: 3, textAlign: 'center' }}>
+              Already have an account?&nbsp;
+              <Link to="/login" component={RouterLink}>
+                Login
               </Link>
             </Typography>
           </Hidden>
         </ContentStyle>
       </Container>
-    </RootStyle>
+    </RootStyle >
   );
 }

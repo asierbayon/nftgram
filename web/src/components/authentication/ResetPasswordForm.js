@@ -30,7 +30,7 @@ export default function ResetPasswordForm({ onSent, onGetEmail }) {
       console.log(error)
     }
   }
-  console.log(isSubmitSuccessful)
+  
   return (
     <form autoComplete="off" noValidate onSubmit={handleSubmit(onSubmit)}>
       <TextField
