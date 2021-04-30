@@ -2,7 +2,7 @@ import * as Yup from 'yup';
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/AuthStore';
 import { Link as RouterLink, useHistory } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify-icons/eva/eye-fill';
@@ -36,9 +36,12 @@ export default function LoginForm() {
     password: Yup.string().required('Password is required')
   });
 
-  const { register, handleSubmit, setError, formState: { errors } } = useForm({
+  const { register, handleSubmit, setError, formState: { errors }, getValues, setValue } = useForm({
     mode: 'onBlur',
-    resolver: yupResolver(LoginSchema)
+    resolver: yupResolver(LoginSchema),
+    defaultValues: {
+      remember: true
+    }
   });
   const onSubmit = async (values) => {
     try {
@@ -60,6 +63,10 @@ export default function LoginForm() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
+
+  const handleRemember = () => {
+    setValue('remember', !getValues('remember'));
+  }
 
   return (
     <>
@@ -108,7 +115,12 @@ export default function LoginForm() {
         >
           <FormControlLabel
             control={
-              <Checkbox />
+              <Checkbox
+                {...register('remember')}
+                onClick={handleRemember}
+                defaultChecked={true}
+              />
+              // TODO
             }
             label="Remember me"
           />
