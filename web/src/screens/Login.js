@@ -29,11 +29,13 @@ const HeaderStyle = styled('header')(({ theme }) => ({
   width: '93vw',
   alignItems: 'center',
   position: 'absolute',
-  padding: theme.spacing(3),
   justifyContent: 'space-between',
   [theme.breakpoints.up('md')]: {
     alignItems: 'flex-start',
     padding: theme.spacing(7, 5, 0, 7)
+  },
+  [theme.breakpoints.down('md')]: {
+    padding: theme.spacing(3, 0, 0, 3)
   }
 }));
 

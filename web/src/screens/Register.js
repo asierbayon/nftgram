@@ -28,11 +28,13 @@ const HeaderStyle = styled('header')(({ theme }) => ({
   width: '93vw',
   alignItems: 'center',
   position: 'absolute',
-  padding: theme.spacing(3),
   justifyContent: 'space-between',
   [theme.breakpoints.up('md')]: {
     alignItems: 'flex-start',
     padding: theme.spacing(7, 5, 0, 7)
+  },
+  [theme.breakpoints.down('md')]: {
+    padding: theme.spacing(3, 0, 0, 3)
   }
 }));
 
@@ -53,7 +55,10 @@ const ContentStyle = styled('div')(({ theme }) => ({
   display: 'flex',
   minHeight: '100vh',
   flexDirection: 'column',
-  justifyContent: 'center'
+  justifyContent: 'center',
+  [theme.breakpoints.down('md')]: {
+    padding: theme.spacing(5, 0, 0, 0)
+  }
 }));
 
 // ----------------------------------------------------------------------
@@ -118,7 +123,7 @@ export default function Register() {
             align="center"
             sx={{ color: 'text.secondary', mt: 3 }}
           >
-            By registering, I agree to Minimal&nbsp;
+            By registering, I agree to Nftgram&nbsp;
             <Link underline="always" sx={{ color: 'text.primary' }}>
               Terms of Service
             </Link>
