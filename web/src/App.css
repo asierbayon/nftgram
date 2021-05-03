@@ -4,6 +4,10 @@ html * {
   padding: 0;
 }
 
+html {
+  box-sizing: border-box;
+}
+
 a {
   text-decoration: none;
 }

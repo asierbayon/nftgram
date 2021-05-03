@@ -3,7 +3,7 @@ import { useState } from 'react';
 import searchFill from '@iconify-icons/eva/search-fill';
 import closeFill from '@iconify-icons/eva/close-fill';
 // material
-import { experimentalStyled as styled, alpha } from '@material-ui/core/styles';
+import { experimentalStyled as styled } from '@material-ui/core/styles';
 import {
   Box,
   Input,
@@ -13,6 +13,10 @@ import {
   ClickAwayListener
 } from '@material-ui/core';
 import SearchIcon from '@material-ui/icons/Search';
+// components 
+import SearchResults from './SearchResults';
+// services
+import { search } from '../../services/users-service';
 
 // ----------------------------------------------------------------------
 
@@ -26,7 +30,7 @@ const SearchBarContainerStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     width: '40%',
   }
-}))
+}));
 
 const SearchbarStyle = styled('div')(({ theme }) => ({
   width: '100%',
@@ -47,6 +51,9 @@ const SearchbarStyle = styled('div')(({ theme }) => ({
 
 export default function Searchbar() {
   const [isOpen, setOpen] = useState(false);
+  const [searchResult, setSearchResult] = useState();
+  const [input, setInput] = useState('');
+
 
   const handleOpen = () => {
     setOpen((prev) => !prev);
@@ -55,6 +62,17 @@ export default function Searchbar() {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleSearch = async (event) => {
+    try {
+      setInput(event.target.value);
+      const result = await search(event.target.value);
+      setSearchResult(result)
+    }
+    catch {
+      setSearchResult(false);
+    }
+  }
 
   return (
     <ClickAwayListener onClickAway={handleClose} >
@@ -69,6 +87,8 @@ export default function Searchbar() {
         <Slide direction="right" in={isOpen} mountOnEnter unmountOnExit>
           <SearchbarStyle>
             <Input
+              onChange={handleSearch}
+              defaultValue={input}
               autoFocus
               disableUnderline
               fullWidth
@@ -97,6 +117,7 @@ export default function Searchbar() {
             />
           </SearchbarStyle>
         </Slide>
+        {isOpen && searchResult && <SearchResults searchResult={searchResult} />}
       </SearchBarContainerStyle>
     </ClickAwayListener>
   );
