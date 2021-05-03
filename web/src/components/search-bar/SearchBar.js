@@ -1,78 +1,103 @@
+import { Icon } from '@iconify/react';
 import { useState } from 'react';
-import usersService from '../../services/users-service';
-import { Link } from 'react-router-dom';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import UserChip from '../users/UserChip';
+import searchFill from '@iconify-icons/eva/search-fill';
+import closeFill from '@iconify-icons/eva/close-fill';
+// material
+import { experimentalStyled as styled, alpha } from '@material-ui/core/styles';
+import {
+  Box,
+  Input,
+  Slide,
+  IconButton,
+  InputAdornment,
+  ClickAwayListener
+} from '@material-ui/core';
+import SearchIcon from '@material-ui/icons/Search';
 
-function SearchBar() {
+// ----------------------------------------------------------------------
 
-  const [state, setstate] = useState({
-    users: [],
-    displayUsers: false,
-  })
+const APPBAR_MOBILE = 64;
+const APPBAR_DESKTOP = 92;
 
-  const fetchUsers = async (input) => {
-    const users = await usersService.search(input);
-    setstate(state => ({
-      ...state,
-      users,
-      displayUsers: true
-    }))
+const SearchBarContainerStyle = styled('div')(({ theme }) => ({
+  width: '70%',
+  display: 'flex',
+  alignItems: 'center',
+  [theme.breakpoints.up('md')]: {
+    width: '40%',
   }
+}))
 
-  const handleSearch = async (event) => {
-    event.preventDefault();
-    if (event.target.value.length > 0) await fetchUsers(event.target.value);
-    else setstate({
-      users: [],
-      displayUsers: false
-    })
+const SearchbarStyle = styled('div')(({ theme }) => ({
+  width: '100%',
+  display: 'flex',
+  alignItems: 'center',
+  height: APPBAR_MOBILE * 2 / 3,
+  padding: theme.spacing(0, 3),
+  borderRadius: '1.5rem',
+  boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+
+  [theme.breakpoints.up('md')]: {
+    height: APPBAR_DESKTOP / 2,
+    padding: theme.spacing(0, 5)
   }
+}));
 
-  const handleDisplayUsers = () => {
-    state.displayUsers
-      ? setstate(state => ({
-        ...state,
-        displayUsers: false
-      }))
-      : setstate(state => ({
-        ...state,
-        displayUsers: true
-      }))
-  }
+// ----------------------------------------------------------------------
 
-  const { displayUsers, users } = state;
+export default function Searchbar() {
+  const [isOpen, setOpen] = useState(false);
 
-  const [open, setOpen] = useState(false);
-
-  const handleClick = () => {
+  const handleOpen = () => {
     setOpen((prev) => !prev);
   };
 
-  const handleClickAway = () => {
+  const handleClose = () => {
     setOpen(false);
   };
 
   return (
-    <div>
-      <div>
-          <ClickAwayListener onClickAway={handleClickAway}>
-            <input onClick={handleClick} placeholder="Search users..." type="text" className="form-control"
-              id="search" autoComplete="off" onChange={handleSearch} style={{ height: 25, fontSize: 12 }} />
-          </ClickAwayListener>
-      </div>
-      {displayUsers && open
-        ? <div className="border rounded px-3 py-1" style={{ position: 'absolute', zIndex: 999, backgroundColor: 'white' }}>
-          {users.users.map(user => (
-            <Link key={user.id} to={`/${user.username}`} onClick={() => { handleDisplayUsers(); handleClick() }} className="row">
-              <UserChip user={user} />
-            </Link>
-          ))}
-        </div>
-        : null
-      }
-    </div>
-  )
-}
+    <ClickAwayListener onClickAway={handleClose} >
+      <SearchBarContainerStyle >
+        {!isOpen ?
+          <IconButton onClick={handleOpen} sx={{ mr: 1 }}>
+            <SearchIcon icon={searchFill} sx={{ width: 20, height: 20 }} />
+          </IconButton>
+          : null
+        }
 
-export default SearchBar
+        <Slide direction="right" in={isOpen} mountOnEnter unmountOnExit>
+          <SearchbarStyle>
+            <Input
+              autoFocus
+              disableUnderline
+              fullWidth
+              placeholder="Search…"
+              sx={{ fontWeight: 'fontWeightBold' }}
+              startAdornment={
+                <InputAdornment position="start">
+                  <Box
+                    component={Icon}
+                    icon={searchFill}
+                    sx={{ color: 'text.disabled', width: 20, height: 20 }}
+                  />
+                </InputAdornment>
+              }
+              endAdornment={
+                <InputAdornment position="start">
+                  <Box
+                    component={Icon}
+                    icon={closeFill}
+                    sx={{ color: 'text.disabled', width: 20, height: 20, cursor: 'pointer' }}
+                    onClick={handleClose}
+                  />
+                </InputAdornment>
+              }
+              sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
+            />
+          </SearchbarStyle>
+        </Slide>
+      </SearchBarContainerStyle>
+    </ClickAwayListener>
+  );
+}
