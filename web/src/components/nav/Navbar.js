@@ -1,8 +1,11 @@
+import { useContext } from 'react';
+import { AuthContext } from '../../contexts/AuthStore';
 // material
 import { experimentalStyled as styled } from '@material-ui/core/styles';
 import { AppBar, Toolbar } from '@material-ui/core';
 // components
 import Searchbar from '../search-bar/SearchBar';
+import AccountPopover from './AccountPopover';
 
 
 // ----------------------------------------------------------------------
@@ -18,6 +21,8 @@ const RootStyle = styled(AppBar)(({ theme }) => ({
 
 const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
   minHeight: APPBAR_MOBILE,
+  display: 'flex',
+  justifyContent: 'space-between',
   [theme.breakpoints.up('lg')]: {
     minHeight: APPBAR_DESKTOP,
     padding: theme.spacing(0, 5)
@@ -27,10 +32,16 @@ const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function Navbar() {
+
+  const { currentUser } = useContext(AuthContext);
+
   return (
     <RootStyle>
       <ToolbarStyle>
         <Searchbar />
+        {currentUser &&
+          <AccountPopover user={currentUser} />
+        }
       </ToolbarStyle>
     </RootStyle>
   );

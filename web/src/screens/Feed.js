@@ -2,7 +2,6 @@ import AssetsFeed from '../components/assets/AssetsFeed';
 import { AuthContext } from '../contexts/AuthStore';
 import { useContext } from 'react';
 import Navbar from '../components/nav/Navbar';
-import SearchResults from '../components/search-bar/SearchResults';
 
 function Feed() {
   const { currentUser } = useContext(AuthContext);
