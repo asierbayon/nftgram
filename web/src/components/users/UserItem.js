@@ -10,7 +10,7 @@ import {
 export default function UserItem({ user }) {
   return (
     <Box sx={{ '&:not(:first-of-type)': { mt: 3 } }} >
-      <RouterLink>
+      <RouterLink to={`/${user.username}`}>
         <Box
           sx={{
             display: 'flex',
