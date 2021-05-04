@@ -54,7 +54,7 @@ module.exports.feed = async (req, res, next) => {
     following.forEach(user => followingArr.push(user.following.id));
     followingArr.push(req.user.id);
 
-    const assetList = await Asset.find({ owner: { $in: followingArr }}, 'title image')
+    const assetList = await Asset.find({ owner: { $in: followingArr }}, 'title image url')
         .sort({ createdAt: -1 })
         .limit(limit)
         .skip(skip)
