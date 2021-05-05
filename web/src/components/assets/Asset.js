@@ -58,71 +58,67 @@ const CoverImgStyle = styled('img')({
 
 // ----------------------------------------------------------------------
 
-export default function Asset({ asset }) {
+export default function Asset({ asset, sx }) {
   const { image, title, owner, likes, likedByMe, id, url } = asset;
   const linkTo = `/assets/${id}`;
 
   return (
-    <Grid
-      item
-      xs={12}
-      sm={6}
-      md={3}
-    >
-      <Card
-        sx={{
-          position: 'relative',
-          borderRadius: '1.5rem',
-          boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'
-        }}>
-        <CardMediaStyle>
-          <SvgIconStyle
-            color="paper"
-            src="/static/icons/shape-avatar.svg"
-            sx={{
-              width: 80,
-              height: 36,
-              zIndex: 9,
-              bottom: -15,
-              position: 'absolute',
-            }}
+    <Card
+      sx={{
+        width: '100%',
+        maxWidth: 450,
+        position: 'relative',
+        borderRadius: '1.5rem',
+        boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px',
+        ...sx
+      }}>
+      <CardMediaStyle>
+        <SvgIconStyle
+          color="paper"
+          src="/static/icons/shape-avatar.svg"
+          sx={{
+            width: 80,
+            height: 36,
+            zIndex: 9,
+            bottom: -15,
+            position: 'absolute',
+          }}
+        />
+        <RouterLink to={`/${owner.username}`}>
+          <AvatarStyle
+            alt={owner.name}
+            src={owner.avatar}
           />
-          <RouterLink to={`/${owner.username}`}>
-            <AvatarStyle
-              alt={owner.name}
-              src={owner.avatar}
-            />
-          </RouterLink>
-          <RouterLink to={linkTo}>
-            <CoverImgStyle alt={title} src={image} />
-          </RouterLink>
-        </CardMediaStyle>
+        </RouterLink>
+        <RouterLink to={linkTo}>
+          <CoverImgStyle alt={title} src={image} />
+        </RouterLink>
+      </CardMediaStyle>
 
-        <CardContent sx={{ pt: 4 }} >
-          <Box sx={{ overflow: "hidden", textOverflow: "ellipsis" }}>
-            <TitleStyle
-              to={linkTo}
-              color="inherit"
-              variant="subtitle2"
-              fontWeight="fontWeightBold"
-              component={RouterLink}
-              noWrap
-            >
-              {title}
-            </TitleStyle>
-          </Box>
+      <CardContent sx={{ pt: 4 }} >
+        <Box sx={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+          <TitleStyle
+            to={linkTo}
+            color="inherit"
+            variant="subtitle2"
+            fontWeight="fontWeightBold"
+            component={RouterLink}
+            noWrap
+          >
+            {title}
+          </TitleStyle>
+        </Box>
 
-          <InfoStyle>
-            <LikeButton
-              id={id}
-              likedByMe={likedByMe}
-              likes={likes}
-              sx={{ paddingLeft: '5px' }}
-            />
-            <AssetOptionsButton openseaUrl={url} id={id} />
-          </InfoStyle>
-        </CardContent>
-      </Card>
-    </Grid>
+        <InfoStyle>
+          <LikeButton
+            id={id}
+            likedByMe={likedByMe}
+            likes={likes}
+            sx={{ paddingLeft: '5px' }}
+          />
+          <AssetOptionsButton openseaUrl={url} id={id} />
+        </InfoStyle>
+      </CardContent>
+    </Card>
   );
 }

@@ -2,7 +2,9 @@ import { useState, useEffect } from 'react'
 import assetsService from '../../services/assets-service';
 import Asset from './Asset';
 // material
-import { Grid, Box } from '@material-ui/core';
+import { Box } from '@material-ui/core';
+
+// ----------------------------------------------------------------------
 
 function AssetsFeed() {
 
@@ -37,15 +39,22 @@ function AssetsFeed() {
   const { assets } = state;
 
   return (
-    <>
-      <Grid
-        container spacing={3}
-      >
-        {assets.map(asset => (
-          <Asset key={asset.id} asset={asset} />
-        ))}
-      </Grid>
-    </>
+    <Box
+      sx={{
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}
+    >
+      {assets.map(asset => (
+        <Asset
+          key={asset.id}
+          asset={asset}
+          sx={{ mb: 3 }}
+        />
+      ))}
+    </Box>
   )
 }
 

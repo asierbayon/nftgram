@@ -13,10 +13,11 @@ import AccountPopover from './AccountPopover';
 const APPBAR_MOBILE = 64;
 const APPBAR_DESKTOP = 92;
 
-const RootStyle = styled(AppBar)(({ theme }) => ({
+const RootStyle = styled(AppBar)(({
   boxShadow: 'none',
   width: '100vw',
   backgroundColor: 'white',
+  position: 'static'
 }));
 
 const ToolbarStyle = styled(Toolbar)(({ theme }) => ({
