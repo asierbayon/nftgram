@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import assetsService from '../../services/assets-service';
 import Asset from './Asset';
+// material
+import { Grid, Box } from '@material-ui/core';
 
 function AssetsFeed() {
 
@@ -35,13 +37,15 @@ function AssetsFeed() {
   const { assets } = state;
 
   return (
-    <div className="w-100 d-flex flex-column align-items-center">
-      {assets.map(asset => (
-        <div key={asset.id} className="mt-3">
-          <Asset asset={asset}/>
-        </div>
-      ))}
-    </div>
+    <>
+      <Grid
+        container spacing={3}
+      >
+        {assets.map(asset => (
+          <Asset key={asset.id} asset={asset} />
+        ))}
+      </Grid>
+    </>
   )
 }
 

@@ -19,8 +19,7 @@ export default function UserItem({ user }) {
           }}
         >
           <Avatar alt={user.fullName} src={user.avatar} />
-          <Box sx={{ ml: 2 }}
-            style={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+          <Box sx={{ ml: 2, overflow: "hidden", textOverflow: "ellipsis" }}>
             <Typography
               variant="subtitle2"
               noWrap

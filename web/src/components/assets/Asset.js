@@ -1,45 +1,128 @@
-import { useState } from 'react';
-import assetsService from '../../services/assets-service'
+import { Link as RouterLink } from 'react-router-dom';
+// material
+import { experimentalStyled as styled } from '@material-ui/core/styles';
+import {
+  Box,
+  Link,
+  Card,
+  Grid,
+  Avatar,
+  CardContent
+} from '@material-ui/core';
+//
+import SvgIconStyle from '../SvgIconStyle';
 import LikeButton from '../buttons/LikeButton';
-import ShareButton from '../buttons/ShareButton';
-import UserChip from '../users/UserChip';
+import AssetOptionsButton from '../buttons/AssetOptionsButton';
 
-function Asset({ asset }) {
-  const { owner, image, title, id } = asset;
+// ----------------------------------------------------------------------
 
-  const [state, setState] = useState({
-    likes: asset.likes,
-    likedByMe: asset.likedByMe
-  })
+const CardMediaStyle = styled('div')({
+  position: 'relative',
+  paddingTop: 'calc(100% * 3 / 4)'
+});
 
-  const handleLike = async () => {
-    if (!state.likedByMe) {
-      await assetsService.like(id)
-      setState({
-        likes: likes + 1,
-        likedByMe: true
-      })
-    } else {
-      await assetsService.unlike(id)
-      setState({
-        likes: likes - 1,
-        likedByMe: false
-      })
-    }
-  }
+const TitleStyle = styled(Link)({
+  height: 44,
+  textDecoration: 'none',
+  '&:hover': {
+    textDecoration: 'none'
+  },
+  overflow: 'hidden',
+  textOverflow: "ellipsis"
+});
 
-  const { likes, likedByMe } = state;
+const AvatarStyle = styled(Avatar)(({ theme }) => ({
+  zIndex: 9,
+  width: 32,
+  height: 32,
+  position: 'absolute',
+  left: theme.spacing(3),
+  bottom: theme.spacing(-2)
+}));
+
+const InfoStyle = styled('div')(({ theme }) => ({
+  display: 'flex',
+  flexWrap: 'wrap',
+  justifyContent: 'space-between',
+  marginTop: theme.spacing(3),
+  color: theme.palette.text.disabled
+}));
+
+const CoverImgStyle = styled('img')({
+  top: 0,
+  width: '100%',
+  height: '100%',
+  objectFit: 'cover',
+  position: 'absolute'
+});
+
+// ----------------------------------------------------------------------
+
+export default function Asset({ asset }) {
+  const { image, title, owner, likes, likedByMe, id, url } = asset;
+  const linkTo = `/assets/${id}`;
 
   return (
-    <div className="pt-2 pb-3" style={{ borderRadius: 20 }}>
-      <div className="d-flex justify-content-between">
-        <UserChip user={owner} className="mb-2" />
-        <ShareButton id={id} className="me-2"/>
-      </div>
-      <img src={image} alt={title} className="w-100 mb-3" onDoubleClick={handleLike} style={{ borderRadius: 10, boxShadow: 'rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px' }} />
-      <LikeButton handleLike={handleLike} likedByMe={likedByMe} likes={likes} />
-    </div >
-  )
-}
+    <Grid
+      item
+      xs={12}
+      sm={6}
+      md={3}
+    >
+      <Card
+        sx={{
+          position: 'relative',
+          borderRadius: '1.5rem',
+          boxShadow: 'rgba(100, 100, 111, 0.2) 0px 7px 29px 0px'
+        }}>
+        <CardMediaStyle>
+          <SvgIconStyle
+            color="paper"
+            src="/static/icons/shape-avatar.svg"
+            sx={{
+              width: 80,
+              height: 36,
+              zIndex: 9,
+              bottom: -15,
+              position: 'absolute',
+            }}
+          />
+          <RouterLink to={`/${owner.username}`}>
+            <AvatarStyle
+              alt={owner.name}
+              src={owner.avatar}
+            />
+          </RouterLink>
+          <RouterLink to={linkTo}>
+            <CoverImgStyle alt={title} src={image} />
+          </RouterLink>
+        </CardMediaStyle>
 
-export default Asset;
+        <CardContent sx={{ pt: 4 }} >
+          <Box sx={{ overflow: "hidden", textOverflow: "ellipsis" }}>
+            <TitleStyle
+              to={linkTo}
+              color="inherit"
+              variant="subtitle2"
+              fontWeight="fontWeightBold"
+              component={RouterLink}
+              noWrap
+            >
+              {title}
+            </TitleStyle>
+          </Box>
+
+          <InfoStyle>
+            <LikeButton
+              id={id}
+              likedByMe={likedByMe}
+              likes={likes}
+              sx={{ paddingLeft: '5px' }}
+            />
+            <AssetOptionsButton openseaUrl={url} id={id} />
+          </InfoStyle>
+        </CardContent>
+      </Card>
+    </Grid>
+  );
+}

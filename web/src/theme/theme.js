@@ -7,6 +7,9 @@ const theme = createMuiTheme({
     },
     h4: {
       fontWeight: 600
+    },
+    h5: {
+      fontWeight: 600
     }
   }
 })

@@ -14,6 +14,7 @@ export default function SearchResults({ searchResult }) {
 
   const SearchResultsStyle = styled('div')(({ theme }) => ({
     position: 'absolute',
+    backgroundColor: 'white',
     top: APPBAR_MOBILE,
     borderRadius: '1.5rem',
     width: '70%',
