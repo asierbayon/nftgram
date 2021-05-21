@@ -1,4 +1,5 @@
 import { createMuiTheme } from "@material-ui/core";
+import componentsOverride from "./overrides";
 
 const theme = createMuiTheme({
   typography: {
@@ -12,6 +13,8 @@ const theme = createMuiTheme({
       fontWeight: 600
     }
   }
-})
+});
+
+theme.components = componentsOverride(theme);
 
 export default theme;

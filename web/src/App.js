@@ -13,6 +13,7 @@ import Error from './screens/Error';
 import { ThemeProvider } from '@material-ui/core';
 import theme from './theme/theme';
 import ResetPassword from './screens/authentication/ResetPassword';
+import Settings from './screens/Settings';
 
 function App() {
   return (
@@ -27,7 +28,7 @@ function App() {
             <Route exact path="/:username" component={User} />
             <Route exact path="/assets/upload" component={UploadAsset} />
             <Route exact path="/assets/:id" component={SingleAsset} />
-            <Route exact path="/:username/edit" component={EditProfile} />
+            <Route exact path="/:username/edit" component={Settings} />
             {/* <Route exact path="/404" component={() => <Error code={404} />} />
             <Route exact path="/403" component={() => <Error code={403} />} /> */}
 

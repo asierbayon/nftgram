@@ -1,21 +1,19 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { Icon } from '@iconify/react';
-import { useFormik, Form, FormikProvider } from 'formik';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 import eyeFill from '@iconify-icons/eva/eye-fill';
 import eyeOffFill from '@iconify-icons/eva/eye-off-fill';
 // material
 import { Box, TextField, IconButton, InputAdornment } from '@material-ui/core';
 import { Button } from '@material-ui/core';
-// hooks
-import useIsMountedRef from '../../hooks/useIsMountedRef';
 // services
-import { register } from '../../services/users-service';
+import { register as registerUser } from '../../services/users-service';
 
 // -------------------------------------------------------------------------
 
 export default function RegisterForm() {
-  const isMountedRef = useIsMountedRef();
   const [showPassword, setShowPassword] = useState(false);
 
   const RegisterSchema = Yup.object().shape({
@@ -32,102 +30,94 @@ export default function RegisterForm() {
     password: Yup.string().required('Password is required')
   });
 
-  const formik = useFormik({
-    initialValues: {
-      fullName: '',
-      email: '',
-      username: '',
-      password: ''
-    },
-    validationSchema: RegisterSchema,
-    onSubmit: async (values, { setErrors, setSubmitting }) => {
-      try {
-        await register({
-          fullName: values.fullName,
-          email: values.email,
-          username: values.username,
-          password: values.password
-        });
-        if (isMountedRef.current) {
-          setSubmitting(false);
-        }
-      } catch (error) {
-        if (isMountedRef.current) {
-          setErrors(error.response.data.errors);
-          setSubmitting(false);
-        }
+  const { register, handleSubmit, setError, formState: { errors } } = useForm({
+    mode: 'onBlur',
+    resolver: yupResolver(RegisterSchema)
+  });
+  const onSubmit = async (values) => {
+    try {
+      await registerUser({
+        fullName: values.fullName,
+        username: values.username,
+        email: values.email,
+        password: values.password
+      });
+    }
+    catch (error) {
+      const keys = Object.keys(error.response.data.errors);
+      const values = Object.values(error.response.data.errors);
+
+      for (let i = 0; i < keys.length; i++) {
+        setError(keys[i], {
+          type: 'manual',
+          message: values[i]
+        })
       }
     }
-  });
-
-  const { errors, touched, handleSubmit, getFieldProps } = formik;
+  }
 
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <TextField
-          fullWidth
-          label="Full name"
-          {...getFieldProps('fullName')}
-          error={Boolean(touched.fullName && errors.fullName)}
-          helperText={touched.fullName && errors.fullName}
-        />
+    <form autoComplete="off" noValidate onSubmit={handleSubmit(onSubmit)}>
+      <TextField
+        fullWidth
+        label="Full name"
+        {...register('fullName')}
+        error={Boolean(errors.fullName?.message)}
+        helperText={errors.fullName?.message}
+      />
 
-        <TextField
-          fullWidth
-          autoComplete="username"
-          name="username"
-          type="text"
-          label="Username"
-          {...getFieldProps('username')}
-          error={Boolean(touched.username && errors.username)}
-          helperText={touched.username && errors.username}
-          sx={{ my: 3 }}
-        />
+      <TextField
+        fullWidth
+        autoComplete="username"
+        type="text"
+        label="Username"
+        {...register('username')}
+        error={Boolean(errors.username?.message)}
+        helperText={errors.username?.message}
+        sx={{ my: 3 }}
+      />
 
-        <TextField
-          fullWidth
-          autoComplete="email"
-          name="email"
-          type="email"
-          label="Email address"
-          {...getFieldProps('email')}
-          error={Boolean(touched.email && errors.email)}
-          helperText={touched.email && errors.email}
-          sx={{ mb: 3 }}
-        />
+      <TextField
+        fullWidth
+        autoComplete="email"
+        type="email"
+        label="Email address"
+        {...register('email')}
+        error={Boolean(errors.email?.message)}
+        helperText={errors.email?.message}
+        sx={{ mb: 3 }}
+      />
 
-        <TextField
+      <TextField
+        fullWidth
+        autoComplete="current-password"
+        type={showPassword ? 'text' : 'password'}
+        label="Password"
+        {...register('password')}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton
+                onClick={() => setShowPassword((prev) => !prev)}
+              >
+                <Icon icon={showPassword ? eyeFill : eyeOffFill} />
+              </IconButton>
+            </InputAdornment>
+          )
+        }}
+        error={Boolean(errors.password?.message)}
+        helperText={errors.password?.message}
+      />
+      <Box sx={{ mt: 3 }}>
+        <Button
           fullWidth
-          autoComplete="current-password"
-          type={showPassword ? 'text' : 'password'}
-          label="Password"
-          {...getFieldProps('password')}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setShowPassword((prev) => !prev)}
-                >
-                  <Icon icon={showPassword ? eyeFill : eyeOffFill} />
-                </IconButton>
-              </InputAdornment>
-            )
-          }}
-          error={Boolean(touched.password && errors.password)}
-          helperText={touched.password && errors.password}
-        />
-        <Box sx={{ mt: 3 }}>
-          <Button
-            fullWidth
-            size="large"
-            type="submit"
-            variant="contained"
-          >
-            Register
+          size="large"
+          type="submit"
+          variant="contained"
+        >
+          Register
         </Button>
-        </Box>
-      </Form>
-    </FormikProvider>
+      </Box>
+    </form>
   )
 }
